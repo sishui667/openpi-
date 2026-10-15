@@ -1,0 +1,939 @@
+{
+  "format": "openarm_handeye_red_cube_grasp_v2",
+  "arm": "left",
+  "scene": "D:\\openpi\\openarm_cloth\\simulation\\v1\\droid_cube_scene.xml",
+  "hand_eye_report": "D:\\openpi\\openarm_cloth\\calibration\\auto_left\\session_20260924_111831_925\\calibration_left_wrist.json",
+  "wrist_camera": "v22_left_d405_rgb",
+  "object_initial_world": [
+    0.45,
+    0.0,
+    0.401
+  ],
+  "step_images_dir": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330",
+  "steps": [
+    {
+      "index": 0,
+      "stage": "ready",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\00_ready.png",
+      "object_actual_world": [
+        0.45,
+        0.0,
+        0.401
+      ],
+      "object_estimated_world": null,
+      "target_finger_points_world": null,
+      "finger_actual_world": [
+        [
+          0.4446087271275265,
+          0.19570663065205582,
+          0.4901222578688526
+        ],
+        [
+          0.3753814524747372,
+          0.13040572425957195,
+          0.4120792049340064
+        ]
+      ],
+      "info": [
+        "gripper=open",
+        "camera=wrist"
+      ]
+    },
+    {
+      "index": 1,
+      "stage": "clear_pose",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\01_clear_pose.png",
+      "object_actual_world": [
+        0.4500000025849859,
+        -1.15700757248677e-07,
+        0.38477090301332995
+      ],
+      "object_estimated_world": null,
+      "target_finger_points_world": null,
+      "finger_actual_world": [
+        [
+          0.34063130762234234,
+          0.1727533405237826,
+          0.7431289562137193
+        ],
+        [
+          0.27140386212540824,
+          0.10745163646085264,
+          0.6650867222671542
+        ]
+      ],
+      "info": [
+        "pos_error=0.0mm",
+        "rot_error=0.00deg"
+      ]
+    },
+    {
+      "index": 2,
+      "stage": "search_pose",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\02_search_pose.png",
+      "object_actual_world": [
+        0.45000000260117806,
+        -1.4170947890580452e-07,
+        0.3847709192458118
+      ],
+      "object_estimated_world": null,
+      "target_finger_points_world": null,
+      "finger_actual_world": [
+        [
+          0.3406296889799702,
+          0.012751352148507863,
+          0.6231295398623542
+        ],
+        [
+          0.2713983464750786,
+          -0.05255000596209258,
+          0.5450904734481193
+        ]
+      ],
+      "info": [
+        "pos_error=0.0mm",
+        "rot_error=0.00deg"
+      ]
+    },
+    {
+      "index": 3,
+      "stage": "detect_cube",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\03_detect_cube.png",
+      "object_actual_world": [
+        0.45000000260117806,
+        -1.4170947890580452e-07,
+        0.3847709192458118
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": null,
+      "finger_actual_world": [
+        [
+          0.3406296889799702,
+          0.012751352148507863,
+          0.6231295398623542
+        ],
+        [
+          0.2713983464750786,
+          -0.05255000596209258,
+          0.5450904734481193
+        ]
+      ],
+      "info": [
+        "pixel=[186.0, 156.0]",
+        "xyz=[0.4474, -0.0044, 0.3855]",
+        "mask=2785"
+      ]
+    },
+    {
+      "index": 4,
+      "stage": "grasp_candidate",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\04_grasp_candidate.png",
+      "object_actual_world": [
+        0.45000000260117806,
+        -1.4170947890580452e-07,
+        0.3847709192458118
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.4524905994205541,
+          0.05774848754430008,
+          0.38199254982671454
+        ],
+        [
+          0.43849440295605324,
+          -0.06414984295027908,
+          0.39159700452676377
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.3406296889799702,
+          0.012751352148507863,
+          0.6231295398623542
+        ],
+        [
+          0.2713983464750786,
+          -0.05255000596209258,
+          0.5450904734481193
+        ]
+      ],
+      "info": [
+        "axis=y-1",
+        "required_span=70.0mm",
+        "actual_span=121.9mm",
+        "score=17.9mm"
+      ]
+    },
+    {
+      "index": 5,
+      "stage": "approach_pose",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\05_approach_pose.png",
+      "object_actual_world": [
+        0.4499998843516822,
+        -1.4084469429326328e-07,
+        0.38477088640149393
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.4474621644798372,
+          0.057150595085563305,
+          0.4554534882134057
+        ],
+        [
+          0.44733820618980646,
+          -0.0659238802101785,
+          0.45546790847784696
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.4474621644798372,
+          0.057150595085563305,
+          0.4554534882134057
+        ],
+        [
+          0.44733820618980646,
+          -0.0659238802101785,
+          0.45546790847784696
+        ]
+      ],
+      "info": [
+        "score=9.6mm",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 6,
+      "stage": "descent_01",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\06_descent_01.png",
+      "object_actual_world": [
+        0.44999988064994806,
+        -1.580465198037798e-07,
+        0.38477091830687776
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.4474146112977216,
+          0.05714569140362549,
+          0.4483114360231418
+        ],
+        [
+          0.4474043570441887,
+          -0.06592884670354987,
+          0.44831417090081194
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.4474146112977216,
+          0.05714569140362549,
+          0.4483114360231418
+        ],
+        [
+          0.4474043570441887,
+          -0.06592884670354987,
+          0.44831417090081194
+        ]
+      ],
+      "info": [
+        "score=9.6mm",
+        "target_height=62.9mm",
+        "step=1/7",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 7,
+      "stage": "descent_02",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\07_descent_02.png",
+      "object_actual_world": [
+        0.44999987492063376,
+        -1.3661127352421076e-07,
+        0.38477091627869026
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.4474184842068,
+          0.057146220530043486,
+          0.44116723860486795
+        ],
+        [
+          0.44739949510286403,
+          -0.0659283164230091,
+          0.441173249381719
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.4474184842068,
+          0.057146220530043486,
+          0.44116723860486795
+        ],
+        [
+          0.44739949510286403,
+          -0.0659283164230091,
+          0.441173249381719
+        ]
+      ],
+      "info": [
+        "score=9.6mm",
+        "target_height=55.7mm",
+        "step=2/7",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 8,
+      "stage": "descent_03",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\08_descent_03.png",
+      "object_actual_world": [
+        0.4499998629340887,
+        -9.340815326678331e-08,
+        0.3847708902835195
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.4474222854310794,
+          0.057146686929036794,
+          0.43402267659561905
+        ],
+        [
+          0.4473946768860947,
+          -0.06592784812822719,
+          0.4340327329558755
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.4474222854310794,
+          0.057146686929036794,
+          0.43402267659561905
+        ],
+        [
+          0.4473946768860947,
+          -0.06592784812822719,
+          0.4340327329558755
+        ]
+      ],
+      "info": [
+        "score=9.6mm",
+        "target_height=48.6mm",
+        "step=3/7",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 9,
+      "stage": "descent_04",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\09_descent_04.png",
+      "object_actual_world": [
+        0.4499998461143467,
+        -8.168234035000401e-08,
+        0.38477090760607724
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.44742925146889395,
+          0.05714759086892105,
+          0.42687655211762726
+        ],
+        [
+          0.4473856780225566,
+          -0.06592693868168789,
+          0.4268944455493206
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.44742925146889395,
+          0.05714759086892105,
+          0.42687655211762726
+        ],
+        [
+          0.4473856780225566,
+          -0.06592693868168789,
+          0.4268944455493206
+        ]
+      ],
+      "info": [
+        "score=9.6mm",
+        "target_height=41.4mm",
+        "step=4/7",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 10,
+      "stage": "descent_05",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\10_descent_05.png",
+      "object_actual_world": [
+        0.4499998447033372,
+        -7.00550245210447e-08,
+        0.384770907540003
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.44744592663742466,
+          0.0571497339741138,
+          0.41972523918789967
+        ],
+        [
+          0.4473639920571552,
+          -0.06592477145743547,
+          0.4197632184972364
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.44744592663742466,
+          0.0571497339741138,
+          0.41972523918789967
+        ],
+        [
+          0.4473639920571552,
+          -0.06592477145743547,
+          0.4197632184972364
+        ]
+      ],
+      "info": [
+        "score=9.6mm",
+        "target_height=34.3mm",
+        "step=5/7",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 11,
+      "stage": "descent_06",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\11_descent_06.png",
+      "object_actual_world": [
+        0.44999980088111763,
+        -1.0334836627173375e-07,
+        0.38477090753486176
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.44750625557569546,
+          0.05715779098903803,
+          0.41254875745441477
+        ],
+        [
+          0.44728351264966104,
+          -0.06591648924337673,
+          0.4126669682230058
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.44750625557569546,
+          0.05715779098903803,
+          0.41254875745441477
+        ],
+        [
+          0.44728351264966104,
+          -0.06591648924337673,
+          0.4126669682230058
+        ]
+      ],
+      "info": [
+        "score=9.7mm",
+        "target_height=27.1mm",
+        "step=6/7",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 12,
+      "stage": "descent_07",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\12_descent_07.png",
+      "object_actual_world": [
+        0.45015435315210794,
+        9.613326968000367e-05,
+        0.38467308518796955
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.44803856665604913,
+          0.05722964039926043,
+          0.4050674860992594
+        ],
+        [
+          0.4465450470633876,
+          -0.06583231992160159,
+          0.40599773560169955
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.44803856665604913,
+          0.05722964039926043,
+          0.4050674860992594
+        ],
+        [
+          0.4465450470633876,
+          -0.06583231992160159,
+          0.40599773560169955
+        ]
+      ],
+      "info": [
+        "score=10.3mm",
+        "target_height=20.0mm",
+        "step=7/7",
+        "gripper=open"
+      ]
+    },
+    {
+      "index": 13,
+      "stage": "close_gripper",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\13_close_gripper.png",
+      "object_actual_world": [
+        0.4514888919773387,
+        -0.0036660581173055175,
+        0.3858706233516061
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.4477150668805384,
+          0.030574137027685,
+          0.40526898027897224
+        ],
+        [
+          0.4468685468388983,
+          -0.03917681655002616,
+          0.4057962414219867
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.4477150668805384,
+          0.030574137027685,
+          0.40526898027897224
+        ],
+        [
+          0.4468685468388983,
+          -0.03917681655002616,
+          0.4057962414219867
+        ]
+      ],
+      "info": [
+        "finger_q=0.017",
+        "contacts=4"
+      ]
+    },
+    {
+      "index": 14,
+      "stage": "lift_pose",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\14_lift_pose.png",
+      "object_actual_world": [
+        0.44348838330675666,
+        0.010290297904311869,
+        0.3847709066293387
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.5054552261344236
+      ],
+      "target_finger_points_world": [
+        [
+          0.44745615828042945,
+          0.030485552393411414,
+          0.5054435870729413
+        ],
+        [
+          0.44737335195658123,
+          -0.03927247857875569,
+          0.5054631700438031
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.44745615828042945,
+          0.030485552393411414,
+          0.5054435870729413
+        ],
+        [
+          0.44737335195658123,
+          -0.03927247857875569,
+          0.5054631700438031
+        ]
+      ],
+      "info": [
+        "score=0.1mm",
+        "gripper=closed"
+      ]
+    },
+    {
+      "index": 15,
+      "stage": "result_failure",
+      "image": "D:\\openpi\\openarm_cloth\\calibration\\handeye_grasp\\steps_20260930_010330\\15_result_failure.png",
+      "object_actual_world": [
+        0.44348838330675666,
+        0.010290297904311869,
+        0.3847709066293387
+      ],
+      "object_estimated_world": [
+        0.44741026974538123,
+        -0.004392225659513992,
+        0.3854552261344237
+      ],
+      "target_finger_points_world": [
+        [
+          0.4477150668805384,
+          0.030574137027685,
+          0.40526898027897224
+        ],
+        [
+          0.4468685468388983,
+          -0.03917681655002616,
+          0.4057962414219867
+        ]
+      ],
+      "finger_actual_world": [
+        [
+          0.44745615828042945,
+          0.030485552393411414,
+          0.5054435870729413
+        ],
+        [
+          0.44737335195658123,
+          -0.03927247857875569,
+          0.5054631700438031
+        ]
+      ],
+      "info": [
+        "lift=-0.0000m",
+        "contact=False",
+        "near_hand=True"
+      ]
+    }
+  ],
+  "observation": {
+    "center_world": [
+      0.44741026974538123,
+      -0.004392225659513992,
+      0.3854552261344237
+    ],
+    "surface_center_world": [
+      0.44741026974538123,
+      -0.004392225659513992,
+      0.38808682092059676
+    ],
+    "pixel_center": [
+      186.0,
+      156.0
+    ],
+    "mask_pixels": 2785,
+    "bbox": [
+      150,
+      123,
+      72,
+      66
+    ],
+    "depth_median_m": 0.2801857888698578,
+    "tcp_world": [
+      [
+        -0.05538886524344094,
+        -0.5625155561194666,
+        0.8249292834726207,
+        0.34599202318767097
+      ],
+      [
+        -0.7410138380990008,
+        -0.5305838142651245,
+        -0.4115571743824425,
+        -0.032923906147154375
+      ],
+      [
+        0.669201438546595,
+        -0.6340796993781456,
+        -0.38744337584179783,
+        0.5690052508164918
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "object_actual_world_at_observation": [
+      0.45000000260117806,
+      -1.4170947890580452e-07,
+      0.3847709192458118
+    ]
+  },
+  "grasp_plan": {
+    "planner": "pinocchio_manifold_path_with_reachable_axis_search",
+    "pinocchio": {
+      "version": "4.0.0",
+      "frame": "openarm_left_hand",
+      "waypoints_per_segment": 12
+    },
+    "grasp_axis": "y",
+    "grasp_axis_sign": -1.0,
+    "skip_approach_ik": false,
+    "approach_height_m": 0.07,
+    "descent_min_height_m": 0.02,
+    "required_full_span_m": 0.07,
+    "approach_reachable_points_world": [
+      [
+        0.4474621644798372,
+        0.057150595085563305,
+        0.4554534882134057
+      ],
+      [
+        0.44733820618980646,
+        -0.0659238802101785,
+        0.45546790847784696
+      ]
+    ],
+    "grasp_reachable_points_world": [
+      [
+        0.4524905994205541,
+        0.05774848754430008,
+        0.38199254982671454
+      ],
+      [
+        0.43849440295605324,
+        -0.06414984295027908,
+        0.39159700452676377
+      ]
+    ],
+    "approach_planning_score_m": 0.009609843293625088,
+    "grasp_planning_score_m": 0.017908095974632374,
+    "approach_metrics": {
+      "midpoint_error_m": 1.2759757293629157e-05,
+      "perpendicular_error_m": 0.00012479423742266758,
+      "separation_m": 0.12307447529574181
+    },
+    "grasp_metrics": {
+      "midpoint_error_m": 0.0026252656563063577,
+      "perpendicular_error_m": 0.016974659512290772,
+      "separation_m": 0.12189833049457915,
+      "axis_index": 1,
+      "axis_sign": -1.0
+    },
+    "finger_open_q": 0.044,
+    "finger_close_q": 0.02,
+    "requested_close_q": 0.02,
+    "selected_close_q": 0.01734177215189874,
+    "preclose_contact_search": {
+      "both_fingers_contact": true,
+      "contacted_finger_geom_ids": [
+        43,
+        46
+      ],
+      "contact_count": 2,
+      "contact_distances_m": [
+        -0.017707878414981733,
+        -0.008141632537498094,
+        -0.008141632537498094
+      ],
+      "contact_points_world": [
+        [
+          0.4771219093946226,
+          0.020121249456367223,
+          0.3676081804375383
+        ],
+        [
+          0.4796706645547029,
+          -0.03282846592105728,
+          0.3675057104689885
+        ],
+        [
+          0.4796707986524751,
+          -0.032830159117721955,
+          0.3670962780961321
+        ]
+      ],
+      "contact_normals_world": [
+        [
+          0.21382882307015258,
+          0.9768630791711667,
+          -0.0039697577584314496
+        ],
+        [
+          0.18816077993483166,
+          -0.9821257038419006,
+          0.004962131333165426
+        ],
+        [
+          0.18816077993483166,
+          -0.9821257038419006,
+          0.004962131333165426
+        ]
+      ],
+      "requested_close_q": 0.02,
+      "selected_close_q": 0.01734177215189874,
+      "search_lower_q": 0.005000000000000001,
+      "target_span_m": 0.07,
+      "dual_contact_candidates": 43
+    },
+    "postclose_contact": {
+      "both_fingers_contact": true,
+      "contacted_finger_geom_ids": [
+        43,
+        46
+      ],
+      "contact_count": 2,
+      "contact_distances_m": [
+        -0.013474267812020246,
+        -0.012648259247033446
+      ],
+      "contact_points_world": [
+        [
+          0.47929353640405625,
+          0.0173794833091011,
+          0.3665227805289044
+        ],
+        [
+          0.4772240391559194,
+          -0.027323201349697235,
+          0.3693723873601428
+        ]
+      ],
+      "contact_normals_world": [
+        [
+          0.050803972697056,
+          0.9985310878242176,
+          0.01883143666271001
+        ],
+        [
+          0.16633813599393613,
+          -0.9857339327784501,
+          -0.025695102319178965
+        ]
+      ]
+    }
+  },
+  "result": {
+    "success": false,
+    "object_initial_z_after_observation_m": 0.3847709192458118,
+    "object_final_world": [
+      0.44348838330675666,
+      0.010290297904311869,
+      0.3847709066293387
+    ],
+    "lift_m": -1.261647308847813e-08,
+    "near_finger_midpoint": true,
+    "finger_midpoint_world": [
+      0.44741475511850537,
+      -0.0043934630926721376,
+      0.5054533785583722
+    ],
+    "contact": false,
+    "motion_mode": "pinocchio_manifold_path_with_reachable_axis_search",
+    "closed_points_world": [
+      [
+        0.4477150668805384,
+        0.030574137027685,
+        0.40526898027897224
+      ],
+      [
+        0.4468685468388983,
+        -0.03917681655002616,
+        0.4057962414219867
+      ]
+    ],
+    "lift_metrics": {
+      "midpoint_error_m": 5.0063310067606016e-06,
+      "perpendicular_error_m": 8.509042259284994e-05,
+      "separation_m": 0.0697580309721671
+    },
+    "postclose_contact": {
+      "both_fingers_contact": true,
+      "contacted_finger_geom_ids": [
+        43,
+        46
+      ],
+      "contact_count": 2,
+      "contact_distances_m": [
+        -0.013474267812020246,
+        -0.012648259247033446
+      ],
+      "contact_points_world": [
+        [
+          0.47929353640405625,
+          0.0173794833091011,
+          0.3665227805289044
+        ],
+        [
+          0.4772240391559194,
+          -0.027323201349697235,
+          0.3693723873601428
+        ]
+      ],
+      "contact_normals_world": [
+        [
+          0.050803972697056,
+          0.9985310878242176,
+          0.01883143666271001
+        ],
+        [
+          0.16633813599393613,
+          -0.9857339327784501,
+          -0.025695102319178965
+        ]
+      ]
+    },
+    "grasp_weld": {
+      "enabled": false,
+      "reason": "disabled_by_flag"
+    }
+  }
+}

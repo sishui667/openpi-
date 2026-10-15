@@ -1,0 +1,116 @@
+{
+  "format": "openarm_left_wrist_calibration_v1",
+  "session": "D:\\openpi\\openarm_cloth\\calibration\\auto_left\\session_20260924_111831_925",
+  "camera": "v22_left_d405_rgb",
+  "detector": "cv2.findChessboardCornersSB",
+  "pattern_size_inner_corners": [
+    8,
+    5
+  ],
+  "total_frames": 15,
+  "detected_frames": 15,
+  "detected_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "intrinsics_rms_reprojection_px": 0.20811244290200168,
+  "intrinsics_source": "simulation_metadata_fixed_pinhole",
+  "camera_matrix": [
+    [
+      216.48573063257084,
+      0.0,
+      159.5
+    ],
+    [
+      0.0,
+      216.48573063257084,
+      119.5
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "hand_eye_method": "PARK",
+  "T_left_tcp_left_wrist_opencv": [
+    [
+      0.0017191847817699113,
+      -0.8012369410677991,
+      -0.5983447239450937,
+      0.06996760524557513
+    ],
+    [
+      0.9999928898201013,
+      -0.000630758422958122,
+      0.0037178559756281745,
+      0.0052731006735644214
+    ],
+    [
+      -0.003356294523727321,
+      -0.5983468612871263,
+      0.8012301597397133,
+      -0.06698130979362206
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "board_world_translation_rmse_mm": 2.8772258528262302,
+  "board_world_translation_median_mm": 2.8603127191847464,
+  "depth_corner_rmse_median_mm": 0.7754477825077688,
+  "depth_valid_ratio_median": 1.0,
+  "simulation_ground_truth_check": {
+    "translation_error_mm": 2.821678156755439,
+    "rotation_error_deg": 0.22213655327493814,
+    "T_left_tcp_left_wrist_opencv_ground_truth": [
+      [
+        1.3115497359255987e-16,
+        -0.8017748745498828,
+        -0.5976261795976807,
+        0.06733127781359999
+      ],
+      [
+        0.9999999999999999,
+        -1.4556870415105018e-16,
+        -5.335428009658319e-18,
+        0.0050000000000000044
+      ],
+      [
+        -1.1546054674582403e-16,
+        -0.5976261795976807,
+        0.8017748745498828,
+        -0.06794932906710001
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  }
+}

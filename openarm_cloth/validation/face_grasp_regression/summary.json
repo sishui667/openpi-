@@ -1,0 +1,116 @@
+[
+  {
+    "case": "near_right45",
+    "fixture": [
+      0.365,
+      -0.06,
+      45
+    ],
+    "returncode": 0,
+    "verdict": "PASS",
+    "lift_mm": 73.38761281949085,
+    "rotation_deg": 1.9132239366484933,
+    "episode_s": 14.27749999997722,
+    "quality": {
+      "opposing_faces": true,
+      "interior_face_contacts": 2,
+      "edge_or_corner_contacts": 0,
+      "minimum_face_margin_mm": 11.9477423699095
+    }
+  },
+  {
+    "case": "near_right0",
+    "fixture": [
+      0.33,
+      -0.08,
+      0
+    ],
+    "returncode": 0,
+    "verdict": "PASS",
+    "lift_mm": 71.89198730677293,
+    "rotation_deg": 6.866016310964237,
+    "episode_s": 14.371499999977669,
+    "quality": {
+      "opposing_faces": true,
+      "interior_face_contacts": 2,
+      "edge_or_corner_contacts": 0,
+      "minimum_face_margin_mm": 12.421458769200159
+    }
+  },
+  {
+    "case": "far_right30",
+    "fixture": [
+      0.48,
+      -0.16,
+      30
+    ],
+    "returncode": 0,
+    "verdict": "PASS",
+    "lift_mm": 70.58953867426865,
+    "rotation_deg": 2.6507252740770335,
+    "episode_s": 14.37599999997769,
+    "quality": {
+      "opposing_faces": true,
+      "interior_face_contacts": 2,
+      "edge_or_corner_contacts": 0,
+      "minimum_face_margin_mm": 13.566410574808977
+    }
+  },
+  {
+    "case": "far_left45",
+    "fixture": [
+      0.505,
+      0.14,
+      45
+    ],
+    "returncode": 0,
+    "verdict": "PASS",
+    "lift_mm": 66.28996496438432,
+    "rotation_deg": 4.200066675683962,
+    "episode_s": 14.41149999997786,
+    "quality": {
+      "opposing_faces": true,
+      "interior_face_contacts": 3,
+      "edge_or_corner_contacts": 0,
+      "minimum_face_margin_mm": 14.827663919228552
+    }
+  },
+  {
+    "case": "left_edge0",
+    "fixture": [
+      0.43,
+      0.2,
+      0
+    ],
+    "returncode": 0,
+    "verdict": "PASS",
+    "lift_mm": 70.59203850650603,
+    "rotation_deg": 3.5925122246707,
+    "episode_s": 14.317999999977413,
+    "quality": {
+      "opposing_faces": true,
+      "interior_face_contacts": 2,
+      "edge_or_corner_contacts": 0,
+      "minimum_face_margin_mm": 13.282669057840387
+    }
+  },
+  {
+    "case": "front_right15",
+    "fixture": [
+      0.55,
+      -0.12,
+      15
+    ],
+    "returncode": 0,
+    "verdict": "PASS",
+    "lift_mm": 59.552642305630954,
+    "rotation_deg": 3.727741783042919,
+    "episode_s": 14.462499999978103,
+    "quality": {
+      "opposing_faces": true,
+      "interior_face_contacts": 3,
+      "edge_or_corner_contacts": 0,
+      "minimum_face_margin_mm": 5.4859633763031
+    }
+  }
+]

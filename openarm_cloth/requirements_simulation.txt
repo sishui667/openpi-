@@ -1,0 +1,9 @@
+# Tested with Python 3.12 on Windows; optional remote-policy code has its own requirements.
+mujoco==3.8.1
+numpy==2.2.2
+scipy==1.15.2
+opencv-python==4.12.0.88
+glfw==2.10.0
+Pillow==10.4.0
+websockets==15.0.1
+msgpack==1.2.1

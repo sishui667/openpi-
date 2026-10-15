@@ -1,0 +1,68 @@
+{
+  "format": "openarm_handeye_red_cube_grasp_v2",
+  "arm": "left",
+  "scene": "D:\\openpi\\openarm_cloth\\simulation\\v1\\droid_cube_scene.xml",
+  "hand_eye_report": "D:\\openpi\\openarm_cloth\\calibration\\auto_left\\session_20260924_111831_925\\calibration_left_wrist.json",
+  "wrist_camera": "v22_left_d405_rgb",
+  "object_initial_world": [
+    0.45,
+    0.0,
+    0.401
+  ],
+  "observation": {
+    "center_world": [
+      0.44741026974538123,
+      -0.004392225659513992,
+      0.3854552261344237
+    ],
+    "surface_center_world": [
+      0.44741026974538123,
+      -0.004392225659513992,
+      0.38808682092059676
+    ],
+    "pixel_center": [
+      186.0,
+      156.0
+    ],
+    "mask_pixels": 2785,
+    "bbox": [
+      150,
+      123,
+      72,
+      66
+    ],
+    "depth_median_m": 0.2801857888698578,
+    "tcp_world": [
+      [
+        -0.05538886524344094,
+        -0.5625155561194666,
+        0.8249292834726207,
+        0.34599202318767097
+      ],
+      [
+        -0.7410138380990008,
+        -0.5305838142651245,
+        -0.4115571743824425,
+        -0.032923906147154375
+      ],
+      [
+        0.669201438546595,
+        -0.6340796993781456,
+        -0.38744337584179783,
+        0.5690052508164918
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "object_actual_world_at_observation": [
+      0.45000000260117806,
+      -1.4170947890580452e-07,
+      0.3847709192458118
+    ]
+  },
+  "result": "detect_only"
+}

@@ -1,0 +1,72 @@
+{
+  "input": "/mnt/data/v23_project/simulation/v1/folding_scene_V22_D405_Wrists_ready.xml",
+  "wrist_natural": "/mnt/data/v23_project/simulation/v1/folding_scene_V23_WRISTS_NATURAL_final01.xml",
+  "three_camera_preview": "/mnt/data/v23_project/simulation/v1/folding_scene_V23_THREE_CAMERA_PREVIEW_final01.xml",
+  "height_m": 0.65,
+  "bracket_robot_attachment": "two 6.6 mm clearance bores, 30 mm apart, on post x=30 mm face T-slot centerlines y=+/-15 mm",
+  "bracket_attachment_hole_centers_world_mm": [
+    [
+      30.0,
+      -15.0,
+      650.0
+    ],
+    [
+      30.0,
+      15.0,
+      650.0
+    ]
+  ],
+  "robot_side_hole_axis_residual_mm": [
+    0.0,
+    0.0
+  ],
+  "d435i_attachment": "two rear M3 mesh hole rims at x=+/-22.5, y=0, z=-25 mm aligned to STEP 45mm camera mounting bores",
+  "camera_hole_centers_bracket_mm": [
+    [
+      0.0,
+      9.000357133746949,
+      7.5
+    ],
+    [
+      0.0,
+      9.000357133746949,
+      52.5
+    ]
+  ],
+  "camera_side_hole_axis_residual_mm": [
+    1.7763568394002505e-15,
+    1.7763568394002505e-15
+  ],
+  "camera_forward_world": [
+    0.7071067811865475,
+    0.0,
+    -0.7071067811865475
+  ],
+  "chest_bracket_pose_robot": [
+    [
+      0.03,
+      -0.03,
+      0.609665119087097
+    ],
+    [
+      -0.5,
+      0.5,
+      0.5,
+      0.5
+    ]
+  ],
+  "camera_pose_bracket": [
+    [
+      -0.017677669529663684,
+      0.026678026663410633,
+      0.03
+    ],
+    [
+      0.6532814824381884,
+      -0.2705980500730985,
+      -0.6532814824381883,
+      -0.2705980500730985
+    ]
+  ],
+  "verification": "Numerical mating only; needs MuJoCo compile, visual check, interference and camera optical calibration. T-slot screw height is user adjustable."
+}

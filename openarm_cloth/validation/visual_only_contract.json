@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "hidden_pose_changed_max_joint_delta_rad": 0.0,
+  "visual_target_changed_max_joint_delta_rad": 0.32786503670507006,
+  "chest_rgbd_observed_centers_m": [
+    [
+      0.33027757552076636,
+      -0.08014478624215388,
+      0.4012979256067807
+    ],
+    [
+      0.47366572705934595,
+      0.13126841433609895,
+      0.4008127754076448
+    ]
+  ],
+  "camera_measured_position_change_m": 0.255451959045906,
+  "scope": "current visual planner and chest RGB-D detector; not historical Pose2Arm tools"
+}

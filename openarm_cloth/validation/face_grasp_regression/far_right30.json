@@ -1,0 +1,184 @@
+{
+  "scene": "D:\\openpi\\openarm_cloth\\simulation\\v1\\droid_cube_scene_perception.xml",
+  "controller_cube_pose_source": "chest_coarse_plus_selected_wrist_rgbd",
+  "controller_contract": {
+    "allowed_inputs": [
+      "chest_rgb",
+      "chest_depth",
+      "selected_wrist_rgb",
+      "selected_wrist_depth",
+      "joint_state",
+      "camera_intrinsics",
+      "chest_extrinsic",
+      "wrist_handeye_transform"
+    ],
+    "forbidden_planner_inputs": [
+      "mujoco_body_xpos",
+      "fixture_cube_pose",
+      "renderer_segmentation_id"
+    ],
+    "grasp_constraint": "contact_and_friction_only_no_weld"
+  },
+  "chest_calibration": "D:\\openpi\\openarm_cloth\\calibration\\auto_chest\\session_20260924_115906_911\\calibration_chest.json",
+  "chest_perceived_center_m": [
+    0.481414483100268,
+    -0.15978785286941924,
+    0.38442428740394996
+  ],
+  "selected_arm": "right",
+  "oracle_read_after_planning": true,
+  "perceived_center_m": [
+    0.4796594003115314,
+    -0.16214717948743837,
+    0.384855801400407
+  ],
+  "perception_iou": 1.0,
+  "perception_error_mm_evaluation_only": 4.154112383849869,
+  "preclose_cube_displacement_mm_evaluation_only": 2.551188998751012e-05,
+  "descent_cube_displacement_mm_evaluation_only": 1.5074066571802578e-05,
+  "grasp_axis": "object_face_1_+1",
+  "perceived_yaw_deg": 36.31787109375,
+  "closing_direction_world": [
+    -0.59226452662602,
+    0.8057435885568414,
+    0.0
+  ],
+  "face_plan_candidates": [
+    {
+      "face_index": 0,
+      "sign": 1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        0.8057435885568414,
+        0.59226452662602,
+        0.0
+      ],
+      "score": 1.1385676791106527,
+      "max_new_penetration_mm": 10.145274778934517,
+      "distal_down_cosine": 0.9739681396699097,
+      "midpoint_error_m": 0.0027336794651799516,
+      "perpendicular_error_m": 0.019340681313080296,
+      "separation_m": 0.0968654912076541
+    },
+    {
+      "face_index": 0,
+      "sign": -1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        -0.8057435885568414,
+        -0.59226452662602,
+        -0.0
+      ],
+      "score": 0.15059120972841888,
+      "max_new_penetration_mm": 0.0,
+      "distal_down_cosine": 0.7558210912676845,
+      "midpoint_error_m": 0.005436278746388668,
+      "perpendicular_error_m": 0.01898061100051255,
+      "separation_m": 0.09693668937302052
+    },
+    {
+      "face_index": 1,
+      "sign": 1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        -0.59226452662602,
+        0.8057435885568414,
+        0.0
+      ],
+      "score": 0.04652703990109243,
+      "max_new_penetration_mm": 0.0,
+      "distal_down_cosine": 0.9193505755657846,
+      "midpoint_error_m": 0.002186282121234319,
+      "perpendicular_error_m": 0.0049328437377498474,
+      "separation_m": 0.09865420616077746
+    },
+    {
+      "face_index": 1,
+      "sign": -1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        0.59226452662602,
+        -0.8057435885568414,
+        -0.0
+      ],
+      "score": 0.20764567376106477,
+      "max_new_penetration_mm": 0.0,
+      "distal_down_cosine": 0.6974337272641418,
+      "midpoint_error_m": 0.005343288681445121,
+      "perpendicular_error_m": 0.030227159752907563,
+      "separation_m": 0.09403884385628339
+    }
+  ],
+  "pregrasp_visual_correction_mm": 2.2213520904776956,
+  "contact_quality_at_grip": {
+    "opposing_faces": true,
+    "interior_face_contacts": 2,
+    "edge_or_corner_contacts": 0,
+    "minimum_face_margin_mm": 13.566410574808977
+  },
+  "contact_points_object_mm": [
+    [
+      1.7173091015683966,
+      28.756597777690462,
+      -15.20206755508058
+    ],
+    [
+      -15.233589425191022,
+      -28.74896891884609,
+      -9.48609234273065
+    ]
+  ],
+  "contact_points_finger_local_mm": [
+    {
+      "geom": "openarm_right_right_finger_collision",
+      "point_mm": [
+        2.644618993476488,
+        -8.911957426945518,
+        61.85314916217674
+      ]
+    },
+    {
+      "geom": "openarm_right_left_finger_collision",
+      "point_mm": [
+        -6.290412139447631,
+        3.631254930004487,
+        53.18928785388678
+      ]
+    }
+  ],
+  "contacts_at_grip": 2,
+  "contacts_final": 3,
+  "grip_force_n": 6.117022504528636,
+  "required_force_per_finger_n": 0.8829,
+  "contact_normal_at_grip_n": [
+    3.1369873238395685,
+    3.0439380895755974
+  ],
+  "contact_tangential_at_grip_n": [
+    0.20219559805062173,
+    0.35056441198496696
+  ],
+  "min_contact_normal_total_n": 6.091006469108375,
+  "lift_mm": 70.58953867426865,
+  "sideways_displacement_mm": 1.0280795981613888,
+  "orientation_final_deg": 1.5840930759957101,
+  "orientation_max_deg": 2.6507252740770335,
+  "gripper_orientation_max_deg": 2.8521601980248263,
+  "peak_angular_speed_rad_s": 0.19409232050095054,
+  "jaw_object_distance_final_mm": 12.284381264295511,
+  "jaw_object_distance_max_mm": 14.262377448149136,
+  "success_continuous_s": 2.8810000000001295,
+  "episode_sim_s": 14.37599999997769,
+  "post_lift_hold_s": 1.5,
+  "joint_convergence_rad": {
+    "clear": 0.014978791955902127,
+    "transit": 0.014989834939667879,
+    "approach": 0.01497818223900027,
+    "grasp": 0.014975930738091336,
+    "close": 0.008440556542938848,
+    "prelift": 0.014999100094949536,
+    "lift": 0.012359024001008523
+  },
+  "verdict": "PASS",
+  "criteria": "opposing interior face contacts, lift>30mm, jaw-object<20mm continuously>=0.5s, episode<=15s"
+}

@@ -1,0 +1,164 @@
+{
+  "source_xml": "D:\\openpi\\openarm_cloth\\simulation\\v1\\folding_scene_V23_THREE_CAMERA_PREVIEW_final01.xml",
+  "source_sha256": "6ec4a9ae3faf1f9de51bc0500e9c59e2a676a4b460e38bf4ca135bea0d2b7f1a",
+  "output_xml": "D:\\openpi\\openarm_cloth\\simulation\\v1\\folding_scene_V25_4_TOWEL_SUPPORT_01.xml",
+  "mujoco_version": "3.8.1",
+  "compilation": "PASS",
+  "source_unmodified": true,
+  "table": {
+    "geom_id": 1,
+    "center": [
+      0.45,
+      0.0,
+      0.33599999999999997
+    ],
+    "half_size": [
+      0.25,
+      0.35,
+      0.02
+    ],
+    "top_z": 0.356
+  },
+  "towel": {
+    "dimensions_m": [
+      0.34,
+      0.42
+    ],
+    "mass_kg": 0.12,
+    "vertices": 221,
+    "grid": [
+      13,
+      17
+    ],
+    "radius_m": 0.003,
+    "initial_z_m": 0.368,
+    "near_edge_x_m": 0.28,
+    "far_edge_x_m": 0.62,
+    "fold_axis_x_m": 0.45,
+    "initial_left_grasp_xyz": [
+      0.28,
+      0.21,
+      0.368
+    ],
+    "initial_right_grasp_xyz": [
+      0.28,
+      -0.21,
+      0.368
+    ],
+    "nominal_left_place_xyz": [
+      0.62,
+      0.21,
+      0.366
+    ],
+    "nominal_right_place_xyz": [
+      0.62,
+      -0.21,
+      0.366
+    ],
+    "collision_bit": 4,
+    "note": "V25.4 isolates cloth-table collision on a hidden support box; self-collision and robot-cloth contact are intentionally disabled for this baseline."
+  },
+  "initial_towel_bounds": {
+    "vertex_count": 221,
+    "x_range_m": [
+      0.2800000000002,
+      0.6199999999998
+    ],
+    "y_range_m": [
+      -0.21,
+      0.21
+    ],
+    "z_range_m": [
+      0.368,
+      0.368
+    ],
+    "surface_clearance_m": 0.009000000000000008
+  },
+  "dynamic_stability_check": {
+    "seconds": 1.4999999999998903,
+    "final_x_range_m": [
+      0.2803602029429785,
+      0.6199562176917406
+    ],
+    "final_y_range_m": [
+      -0.2093589032364465,
+      0.20995306702647823
+    ],
+    "final_z_range_m": [
+      0.3574856063061538,
+      0.3649507912099356
+    ],
+    "final_span_xy_m": [
+      0.3395960147487621,
+      0.4193119702629247
+    ],
+    "minimum_sampled_vertex_z_m": 0.3567333736522295,
+    "maximum_sampled_vertex_z_m": 0.368,
+    "maximum_abs_qvel_sampled": 2.2968984467280227,
+    "support_contact_sample_count": 40,
+    "peak_support_contacts": 50,
+    "first_support_contact_s": 0.03800000000000003,
+    "minimum_support_contact_dist_m": -0.007266626347770513,
+    "status": "PASS"
+  },
+  "original": {
+    "nq": 18,
+    "nv": 18,
+    "njnt": 18,
+    "nu": 18,
+    "ncam": 5,
+    "nflex": 0
+  },
+  "new": {
+    "nq": 681,
+    "nv": 681,
+    "njnt": 681,
+    "nu": 18,
+    "ncam": 5,
+    "nflex": 1
+  },
+  "cameras_preserved": [
+    "front_camera",
+    "side_camera",
+    "v22_left_d405_rgb",
+    "v22_right_d405_rgb",
+    "chest_d435i_preview"
+  ],
+  "actuators_preserved": [
+    "left_joint1_ctrl",
+    "left_joint2_ctrl",
+    "left_joint3_ctrl",
+    "left_joint4_ctrl",
+    "left_joint5_ctrl",
+    "left_joint6_ctrl",
+    "left_joint7_ctrl",
+    "left_finger1_ctrl",
+    "left_finger2_ctrl",
+    "right_joint1_ctrl",
+    "right_joint2_ctrl",
+    "right_joint3_ctrl",
+    "right_joint4_ctrl",
+    "right_joint5_ctrl",
+    "right_joint6_ctrl",
+    "right_joint7_ctrl",
+    "right_finger1_ctrl",
+    "right_finger2_ctrl"
+  ],
+  "previous_options": {
+    "timestep": null,
+    "iterations": null,
+    "solver": null,
+    "integrator": null,
+    "tolerance": null
+  },
+  "new_options": {
+    "timestep": "0.0005",
+    "iterations": "400",
+    "solver": "CG",
+    "integrator": "implicitfast",
+    "tolerance": "1e-6",
+    "noslip_iterations": "0",
+    "memory": "96M"
+  },
+  "validation_scope": "MJCF compile + 1.5 s headless flat-towel stability from the towel_ready bimanual pose using an isolated hidden support collision layer + original robot joints/actuators/cameras/source hash. NOT verified: self-collision, robot-cloth grasp, folding, camera calibration."
+}

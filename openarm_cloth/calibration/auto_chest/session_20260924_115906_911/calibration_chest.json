@@ -1,0 +1,121 @@
+{
+  "format": "openarm_chest_camera_calibration_v1",
+  "session": "D:\\openpi\\openarm_cloth\\calibration\\auto_chest\\session_20260924_115906_911",
+  "camera": "chest_d435i_preview",
+  "detector": "cv2.findChessboardCornersSB",
+  "pattern_size_inner_corners": [
+    8,
+    5
+  ],
+  "total_frames": 20,
+  "detected_frames": 20,
+  "detected_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "intrinsics_rms_reprojection_px": 0.1576872941447112,
+  "intrinsics_source": "simulation_metadata_fixed_pinhole",
+  "camera_matrix": [
+    [
+      432.97146126514167,
+      0.0,
+      319.5
+    ],
+    [
+      0.0,
+      432.97146126514167,
+      239.5
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "T_base_chest_camera_opencv": [
+    [
+      -0.0015432944332610804,
+      0.6199229136794305,
+      0.7846612003517807,
+      0.058532085069154555
+    ],
+    [
+      0.9999986988389343,
+      0.0005882146157760587,
+      0.0015021065221235697,
+      -0.0006253439481703618
+    ],
+    [
+      0.0004696410653723948,
+      0.7846624975738109,
+      -0.6199230148482138,
+      0.5911333813833055
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "world_camera_translation_consistency_rmse_mm": 4.115336491781734,
+  "world_camera_translation_consistency_median_mm": 3.0673525903624883,
+  "world_camera_rotation_consistency_median_deg": 0.45470923008206376,
+  "depth_corner_rmse_median_mm": 0.4689572690163497,
+  "depth_valid_ratio_median": 1.0,
+  "simulation_ground_truth_check": {
+    "translation_error_mm": 0.9477770812690187,
+    "rotation_error_deg": 0.2077276168341096,
+    "T_base_chest_camera_opencv_ground_truth": [
+      [
+        0.0,
+        0.6173724090656527,
+        0.7866710294172984,
+        0.0580922402258
+      ],
+      [
+        0.9999999999999998,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.7866710294172984,
+        -0.6173724090656527,
+        0.590573235995
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  }
+}

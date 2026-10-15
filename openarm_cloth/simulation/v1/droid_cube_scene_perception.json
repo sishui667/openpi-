@@ -1,0 +1,191 @@
+{
+  "role": "Member B -- frozen single-arm grasp scene and physics parameters",
+  "source_xml": "D:\\openpi\\openarm_cloth\\simulation\\v1\\droid_cube_scene.xml",
+  "source_sha256": "d452c13db96342803fedcb96a7aef11e6f3e44c23124cc586d8344cb580f4357",
+  "source_unmodified": true,
+  "output_xml": "D:\\openpi\\openarm_cloth\\simulation\\v1\\droid_cube_scene_perception.xml",
+  "output_sha256": "0a91274b147e130e4f2ba36dafb022664841d8ad027054ae29cd45f360ba3e61",
+  "mujoco_version": "3.8.1",
+  "compilation": "PASS",
+  "frozen_source_rule": "droid_cube_scene.xml is read-only. Never regenerate it -- build_droid_object_scene.py:ensure_scene() overwrites it from folding_scene_V25_4_TOWEL_SUPPORT_04.xml when the mtimes line up. Run this script with --verify to detect that.",
+  "model": {
+    "name": "droid_cube_scene_perception",
+    "nq": 25,
+    "nv": 24,
+    "njnt": 19,
+    "nu": 18,
+    "ncam": 6,
+    "ngeom": 92,
+    "timestep_s": 0.0005,
+    "integrator": 3,
+    "solver": 1,
+    "iterations": 400,
+    "noslip_iterations": 10,
+    "noslip_tolerance": 1e-06
+  },
+  "table": {
+    "geom": "folding_table",
+    "center": [
+      0.45,
+      0.0,
+      0.336
+    ],
+    "half_size": [
+      0.25,
+      0.35,
+      0.02
+    ],
+    "top_z": 0.35600000000000004,
+    "friction": [
+      0.8,
+      0.005,
+      0.0001
+    ]
+  },
+  "object": {
+    "body": "droid_object",
+    "body_id": 29,
+    "geom": "droid_object_geom",
+    "geom_id": 91,
+    "shape": "box",
+    "half_size_m": [
+      0.0288,
+      0.0288,
+      0.0288
+    ],
+    "edge_m": 0.0576,
+    "mass_kg": 0.18,
+    "weight_n": 1.7658,
+    "diaginertia": [
+      0.00012,
+      0.00012,
+      0.00012
+    ],
+    "rgba": [
+      0.8500000238418579,
+      0.11999999731779099,
+      0.07999999821186066,
+      1.0
+    ],
+    "friction": [
+      1.0,
+      0.02,
+      0.01
+    ],
+    "condim": 3,
+    "solref": [
+      0.004,
+      1.0
+    ],
+    "solimp": [
+      0.95,
+      0.99,
+      0.001,
+      0.5,
+      2.0
+    ],
+    "spawn_pose": [
+      0.45,
+      0.0,
+      0.401
+    ],
+    "resting_pose": [
+      0.44999998060189556,
+      1.4803013057636896e-08,
+      0.38477083196404616
+    ],
+    "resting_aabb_lo": [
+      0.42119995841062163,
+      -0.028800002478136962,
+      0.355970798509164
+    ],
+    "resting_aabb_hi": [
+      0.4788000027931695,
+      0.02880003208416308,
+      0.4135708654189283
+    ],
+    "note": "rgba red is what the monocular perception mask keys on; friction[0]=1.0 is the sliding coefficient the grasp relies on."
+  },
+  "camera": {
+    "name": "workspace_camera",
+    "mode": "fixed",
+    "role": "monocular workspace camera for cube localisation",
+    "pos": [
+      0.45,
+      -5.204748896376251e-17,
+      1.2348
+    ],
+    "quat": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "look_at": [
+      0.45,
+      0.0,
+      0.38480000000000003
+    ],
+    "distance_m": 0.85,
+    "elevation_deg": 90.0,
+    "fovy_deg": 55.0,
+    "resolution_wh": [
+      640,
+      480
+    ],
+    "intrinsics_640x480": {
+      "fx": 461.03571047307986,
+      "fy": 461.03571047307986,
+      "cx": 320.0,
+      "cy": 240.0,
+      "note": "square pixels assumed; validated by silhouette IoU 0.954 at the ground-truth pose"
+    },
+    "cameras_preserved": [
+      "front_camera",
+      "side_camera",
+      "v22_left_d405_rgb",
+      "v22_right_d405_rgb",
+      "chest_d435i_preview"
+    ],
+    "render_check": {
+      "lit_pixel_fraction": 1.0,
+      "note": "a camera aimed the wrong way renders black without raising anything, so the build renders one frame and refuses to write a config if it is essentially black"
+    }
+  },
+  "grasp": {
+    "arm": "right",
+    "arm_joints": 7,
+    "finger_joint_range_m": [
+      0.0,
+      0.044
+    ],
+    "planner": "handeye_grasp_red_cube.search_reachable_grasp",
+    "axis_policy": "MUST BE PINNED. search_reachable_grasp() picks whichever of the six signed world axes has the lowest IK residual, and that winner flips between calls (measured: y- at 18.1 mm residual, then y+ at 9.8 mm after the target moved). Different signed axes are mirror images, so anything that corrects the grasp across calls must hold the axis fixed. This also explains run-to-run differences of the same plan (2 contacts in one run, 0 in another).",
+    "calibrated_axis": "y-",
+    "calibrated_offset_mm": [
+      -48.0,
+      5.3,
+      25.2
+    ],
+    "calibration_method": "Close once, read the contact centroid in the object frame, shift the requested grasp centre by minus that, repeat. Converged in 5 passes from 37.0 mm off centre to 4.2 mm off centre.",
+    "measured_grip_force_n": 6.085,
+    "measured_grip_force_per_finger_n": 3.043,
+    "friction_requirement_n_per_finger": 0.8829,
+    "requirement_derivation": "2*mu*N >= m*g, mu=1.0, m=0.18 kg -> N >= 0.883 N",
+    "margin": 3.4,
+    "weld": "not used anywhere",
+    "contact_model": {
+      "pair_count": 4,
+      "condim": 4,
+      "sliding_friction": 1.0,
+      "torsional_friction_m": 0.03,
+      "solref": [
+        0.005,
+        1.0
+      ],
+      "reason": "The imported pad mesh yields one point on each opposing cube face. condim=4 models the torsional resistance of a finite pad contact patch; no weld is used."
+    },
+    "known_limitation": "The 5-pass recentring is a calibration procedure, not an execution path: 5 passes x ~8 s of sim far exceeds the task book's 15 s budget. For a fixed scene, calibrate once and bake the offset in; the episode itself is then a single pass."
+  },
+  "validation_scope": "MJCF compile of the frozen scene plus the wrapper camera, and the physics parameters read back out of the compiled model. The grasp numbers come from a closed-loop measurement in this scene. NOT verified here: perception accuracy on other object poses, the 15 s budget, or anything outside the right arm."
+}

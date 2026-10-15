@@ -1,0 +1,111 @@
+{
+  "format": "openarm_right_wrist_calibration_v1",
+  "session": "D:\\openpi\\openarm_cloth\\calibration\\auto_right\\session_20260924_113257_265",
+  "camera": "v22_right_d405_rgb",
+  "detector": "cv2.findChessboardCornersSB",
+  "pattern_size_inner_corners": [
+    8,
+    5
+  ],
+  "total_frames": 10,
+  "detected_frames": 10,
+  "detected_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "intrinsics_rms_reprojection_px": 0.19340311360813434,
+  "intrinsics_source": "simulation_metadata_fixed_pinhole",
+  "camera_matrix": [
+    [
+      216.48573063257084,
+      0.0,
+      159.5
+    ],
+    [
+      0.0,
+      216.48573063257084,
+      119.5
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "hand_eye_method": "TSAI",
+  "T_right_tcp_right_wrist_opencv": [
+    [
+      0.005160024710959554,
+      -0.8011133481241208,
+      -0.5984904156311472,
+      0.0671313334153707
+    ],
+    [
+      0.9999857907588381,
+      0.00333252676536433,
+      0.004160834745504827,
+      0.00572377475122478
+    ],
+    [
+      -0.0013388149250577186,
+      -0.5985033815466034,
+      0.8011191608318187,
+      -0.06886250625802393
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "board_world_translation_rmse_mm": 2.2361458353501447,
+  "board_world_translation_median_mm": 2.247418980242839,
+  "depth_corner_rmse_median_mm": 1.0432783051882781,
+  "depth_valid_ratio_median": 1.0,
+  "simulation_ground_truth_check": {
+    "translation_error_mm": 1.1822521875292258,
+    "rotation_error_deg": 0.3117776935547767,
+    "T_right_tcp_right_wrist_opencv_ground_truth": [
+      [
+        -4.696733716196175e-17,
+        -0.8017748745498827,
+        -0.5976261795976807,
+        0.06733127781359993
+      ],
+      [
+        0.9999999999999997,
+        6.134265377490993e-19,
+        1.6494884583927558e-16,
+        0.004999999999999949
+      ],
+      [
+        -5.119363006893934e-17,
+        -0.5976261795976807,
+        0.8017748745498829,
+        -0.06794932906709994
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  }
+}
