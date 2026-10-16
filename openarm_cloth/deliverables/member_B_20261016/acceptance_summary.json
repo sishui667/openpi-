@@ -1,0 +1,85 @@
+{
+  "scene_verification": "PASS",
+  "runs": {
+    "sim_full_npz": {
+      "source": "simulation",
+      "frames": 762,
+      "budget_verdict": "PASS_SOFT_REALTIME",
+      "mean_ms": 22.10670433070866,
+      "p95_ms": 33.585389999999975,
+      "max_ms": 56.6782,
+      "over_budget_frames": 5,
+      "actual_hz": 19.99970000450035,
+      "evidence_audit": "PASS",
+      "measured_active_tracking_error_rad": {
+        "rms": 0.2564124774171418,
+        "max": 2.062737442465182
+      },
+      "source_to_bounded_command_max_lag_rad": 2.3533621830344202,
+      "perception_valid_frames": 755,
+      "gripper_counts": {
+        "closed": 0,
+        "open": 762
+      }
+    },
+    "sim_run_1": {
+      "source": "simulation",
+      "frames": 500,
+      "budget_verdict": "PASS_SOFT_REALTIME",
+      "mean_ms": 23.033344599999996,
+      "p95_ms": 31.692555,
+      "max_ms": 52.2814,
+      "over_budget_frames": 3,
+      "actual_hz": 19.99977320257223,
+      "evidence_audit": "PASS",
+      "measured_active_tracking_error_rad": {
+        "rms": 0.1531435814766892,
+        "max": 2.062737442465182
+      },
+      "source_to_bounded_command_max_lag_rad": 2.3533621830344202,
+      "perception_valid_frames": 493,
+      "gripper_counts": {
+        "closed": 0,
+        "open": 500
+      }
+    },
+    "sim_run_2": {
+      "source": "simulation",
+      "frames": 500,
+      "budget_verdict": "PASS",
+      "mean_ms": 22.044751,
+      "p95_ms": 28.465539999999994,
+      "max_ms": 49.7312,
+      "over_budget_frames": 0,
+      "actual_hz": 19.999631206800842,
+      "evidence_audit": "PASS",
+      "measured_active_tracking_error_rad": {
+        "rms": 0.1531435814766892,
+        "max": 2.062737442465182
+      },
+      "source_to_bounded_command_max_lag_rad": 2.3533621830344202,
+      "perception_valid_frames": 493,
+      "gripper_counts": {
+        "closed": 0,
+        "open": 500
+      }
+    },
+    "usb_capture": {
+      "source": "usb",
+      "frames": 500,
+      "budget_verdict": "PASS_SOFT_REALTIME",
+      "mean_ms": 0.40724260000000007,
+      "p95_ms": 0.3453299999999996,
+      "max_ms": 58.3473,
+      "over_budget_frames": 1,
+      "actual_hz": 19.999819521628073,
+      "evidence_audit": "PASS"
+    }
+  },
+  "note": "Audit PASS means evidence consistency, not necessarily latency PASS or grasp success.",
+  "input_npz": {
+    "path": "C:\\Users\\26473\\Desktop\\openpi\\openpi\\pose2arm-main\\data\\p2a_test.npz",
+    "sha256": "36b1d25b7115612f9e15e7fea219b73fc5b4ac559aad5d5bab12dc4d76b2a324",
+    "copied_into_delivery": false
+  }
+}

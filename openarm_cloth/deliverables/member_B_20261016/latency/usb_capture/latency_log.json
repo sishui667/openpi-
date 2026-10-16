@@ -1,0 +1,150 @@
+{
+  "generated": "2026-10-16T15:05:20+08:00",
+  "source": "usb",
+  "camera": {
+    "device": 0,
+    "backend": "DSHOW",
+    "mjpg_requested_ok": true,
+    "auto_exposure_requested_ok": true,
+    "reported_width": 640.0,
+    "reported_height": 480.0,
+    "reported_fps": 30.00003000003
+  },
+  "process_priority": "normal",
+  "resolution_wh": [
+    640,
+    480
+  ],
+  "requested_frames": 500,
+  "actual_resolution_wh": [
+    640,
+    480
+  ],
+  "frames": 500,
+  "control_hz": 20.0,
+  "budget_ms": 50.0,
+  "steps_per_tick": 0,
+  "physics_timestep_s": null,
+  "simulated_s_per_tick": null,
+  "scene_workspace": null,
+  "startup_ms_excluded": 3151.7428000006475,
+  "warmup_ms_excluded": 1029.4258999983867,
+  "warmup_frames": 30,
+  "stages_ms": {
+    "capture": {
+      "mean": 0.40724260000000007,
+      "p50": 0.21365,
+      "p95": 0.3453299999999996,
+      "p99": 0.4598929999999994,
+      "min": 0.0849,
+      "max": 58.3473
+    },
+    "mask": {
+      "mean": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "fit": {
+      "mean": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "mapping": {
+      "mean": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "control_physics": {
+      "mean": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    }
+  },
+  "end_to_end_ms": {
+    "mean": 0.40724260000000007,
+    "p50": 0.21365,
+    "p95": 0.3453299999999996,
+    "p99": 0.4598929999999994,
+    "min": 0.0849,
+    "max": 58.3473
+  },
+  "tick_work_ms": {
+    "mean": 0.4199802,
+    "p50": 0.2254,
+    "p95": 0.3649399999999998,
+    "p99": 0.47261499999999934,
+    "min": 0.0946,
+    "max": 58.3664
+  },
+  "first_command_consumed_ms": null,
+  "source_read_ms": {
+    "mean": 33.5979396,
+    "p50": 32.03615,
+    "p95": 47.80828999999999,
+    "p99": 48.315396,
+    "min": 30.5741,
+    "max": 49.3089
+  },
+  "host_frame_age_ms": {
+    "mean": 17.644318,
+    "p50": 17.1092,
+    "p95": 34.66658499999997,
+    "p99": 46.497446999999994,
+    "min": 0.1823,
+    "max": 48.859
+  },
+  "wall_seconds_including_pacing": 25.000225600000704,
+  "actual_stream_hz": 19.999819521628073,
+  "tick_start_interval_ms": {
+    "mean": 49.99962825651303,
+    "p50": 49.9927,
+    "p95": 50.39618,
+    "p99": 50.513724,
+    "min": 41.106,
+    "max": 58.4009
+  },
+  "processing_throughput_hz": 2381.0646311421347,
+  "ticks_over_budget": 1,
+  "deadline_miss_rate": 0.002,
+  "allowed_miss_rate": 0.01,
+  "budget_verdict": "PASS_SOFT_REALTIME",
+  "strict_zero_miss_pass": false,
+  "failure": null,
+  "perception_valid_frames": 0,
+  "skipped_camera_frames_latest_only": 236,
+  "raw_frames_saved": false,
+  "inactive_left_max_error_rad": null,
+  "npz": null,
+  "driver": null,
+  "processed_npz_rows": 0,
+  "tracking": null,
+  "scene_manifest": "deliverables\\member_B_20261016\\scene_manifest.json",
+  "manifest_verification_ms_excluded": 1736.3667000008718,
+  "latency_scope": "host request for latest USB frame -> delivery; capture only, no robot control",
+  "excluded": [
+    "camera exposure-to-host latency (unavailable)",
+    "A human landmark extraction and Pose2Arm IK (offline NPZ, not measured)",
+    "monitor display latency",
+    "startup and declared warmup",
+    "buffered CSV write excluded from tick_work_ms, included in actual_stream_hz"
+  ],
+  "gripper_input": null,
+  "host": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.14",
+    "mujoco": "3.8.1",
+    "opencv": "4.12.0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "table_center_m": [0.445, 0.0, 0.38],
+  "table_half_size_m": [0.145, 0.23, 0.02],
+  "placement_x_m": [0.35, 0.54],
+  "placement_y_m": [-0.18, 0.18],
+  "cube_half_size_m": 0.0288,
+  "note": "Experimental candidate: 40cm top, 29x46cm table, 19x36cm centre-placement area. Not the default until validated."
+}

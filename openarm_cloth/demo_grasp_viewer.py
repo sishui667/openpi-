@@ -36,12 +36,13 @@ from handeye_grasp_red_cube import (finger_joint_indices,                   # no
                                     solve_target_q,
                                     solve_relaxed_gripper_q)
 from pose2arm_driver import CLOSE_BELOW_M, OPEN_ABOVE_M                     # noqa: E402
+from task_workspace import (TABLE_X, TABLE_Y, constrain_initial_placement,  # noqa: E402
+                            load_task_model, workspace_description,
+                            CONFIG as TASK_WORKSPACE_CONFIG)
 from teleop_towel_dataset import (apply_controller, build_arm_specs,        # noqa: E402
                                   build_finger_actuators)
 
 CUBE_HALF = 0.0288
-TABLE_X = (0.300, 0.600)
-TABLE_Y = (-0.200, 0.200)
 CONTROLLER_CONTRACT = {
     "allowed_inputs": [
         "chest_rgb", "chest_depth", "selected_wrist_rgb",
@@ -365,6 +366,29 @@ def place_cube_for_blind_test(model, data, pose):
     mujoco.mj_forward(model, data)
 
 
+def initialize_observation_posture(model, data, specs):
+    """Initialize robot-only high standby poses before the fixture is placed.
+
+    The old home fingers overlap parts of the smaller tabletop and could
+    knock a near-edge cube off during initial settling. These fixed robot
+    observation poses use no object position and are initial conditions, not
+    teleportation during an episode. Actual grasp motion remains physical.
+    """
+    mujoco.mj_forward(model, data)
+    for side in ("left", "right"):
+        spec = specs[side]
+        rotation = body_transform(data, spec.body_id)[:3, :3].copy()
+        quaternion = quat_from_body(model, data, spec.body_id)
+        sign = 1.0 if side == "left" else -1.0
+        q, _, _ = solve_target_q(
+            model, data, spec, np.array([0.28, sign * 0.16, 0.68]),
+            quaternion, data.qpos[spec.qpos].copy(), target_rotation=rotation)
+        data.qpos[spec.qpos] = q
+        data.qpos[finger_joint_indices(model, side)[0]] = FINGER_OPEN
+        mujoco.mj_forward(model, data)
+    data.qvel[:] = 0
+
+
 def interactive_cube_placement(seconds):
     """Let the human position the cube with the keyboard before planning.
 
@@ -372,12 +396,13 @@ def interactive_cube_placement(seconds):
     resulting environment pose is transferred; the controller subsequently
     renders a fresh RGB image and receives none of these coordinates.
     """
-    m = mujoco.MjModel.from_xml_path(str(SCENE))
+    m = load_task_model(SCENE)
     d = mujoco.MjData(m)
     specs = build_arm_specs(m)
     fing_act = build_finger_actuators(m)
     repair_left_finger_position_servos(m, fing_act)
     mujoco.mj_resetDataKeyframe(m, d, 0)
+    initialize_observation_posture(m, d, specs)
     q_hold = {side: d.qpos[specs[side].qpos].copy()
               for side in ("left", "right")}
     finger = {"left": FINGER_OPEN, "right": FINGER_OPEN}
@@ -411,9 +436,7 @@ def interactive_cube_placement(seconds):
     def apply_placement_command(kind, value):
         if kind == "move":
             dx, dy = value
-            # Keep the fixture on the physical tabletop only.  This is not a
-            # controller workspace gate: every accepted camera detection is
-            # sent to IK, including poses that ultimately prove unreachable.
+            # Initial-fixture constraint only; never supplied to visual IK.
             d.qpos[qadr] = np.clip(d.qpos[qadr] + dx, *TABLE_X)
             d.qpos[qadr + 1] = np.clip(d.qpos[qadr + 1] + dy, *TABLE_Y)
         elif kind == "reset":
@@ -440,23 +463,32 @@ def interactive_cube_placement(seconds):
           "  SPACE              accept and start wrist-camera perception + IK\n"
           "  ENTER              does nothing (prevents accidental acceptance)\n"
           f"The placement window also accepts automatically after {seconds:.0f} s.\n")
+    print(workspace_description())
+    constrain_initial_placement(m, d)
     started = time.perf_counter()
     with mujoco.viewer.launch_passive(m, d, key_callback=on_key) as viewer:
         viewer.set_texts((None, None,
-                         "PLACE CUBE\nW/S/A/D: move | Q/E: rotate\nSPACE: start camera-guided grasp", ""))
+                         "PLACE CUBE\n" + workspace_description() +
+                         "\nW/S/A/D: move | Q/E: rotate\nSPACE: start camera-guided grasp", ""))
         viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
-        viewer.cam.distance, viewer.cam.azimuth, viewer.cam.elevation = 1.35, 90.0, -55.0
-        viewer.cam.lookat[:] = np.array([0.45, 0.0, 0.40])
+        viewer.cam.distance, viewer.cam.azimuth, viewer.cam.elevation = 1.25, 180.0, -35.0
+        viewer.cam.lookat[:] = np.array([0.28, 0.0, 0.53])
         while (viewer.is_running() and not confirmed[0]
                and time.perf_counter() - started < seconds):
             while commands:
                 apply_placement_command(*commands.pop(0))
+            constrain_initial_placement(m, d)
             for _ in range(steps_per_frame):
                 apply_controller(m, d, specs, fing_act, q_hold, finger)
                 mujoco.mj_step(m, d)
+            constrain_initial_placement(m, d)
             viewer.sync()
             time.sleep(1.0 / 60.0)
 
+    if not confirmed[0] and time.perf_counter() - started < seconds:
+        print("placement cancelled by closing the window")
+        return None
+    constrain_initial_placement(m, d)
     x, y = map(float, d.qpos[qadr:qadr + 2])
     rot = np.empty(9, dtype=float)
     mujoco.mju_quat2Mat(rot, d.qpos[qadr + 3:qadr + 7])
@@ -468,7 +500,8 @@ def interactive_cube_placement(seconds):
 
 def main(check_only=False, post_lift_s=1.5, report_path=None,
          test_cube_pose=None, preview_initial_s=0.0) -> int:
-    m = mujoco.MjModel.from_xml_path(str(SCENE))
+    m = load_task_model(SCENE)
+    print(workspace_description())
     d = mujoco.MjData(m)
     DT = float(m.opt.timestep)
 
@@ -483,6 +516,7 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
     WEIGHT = float(m.body_mass[ob]) * 9.81
 
     mujoco.mj_resetDataKeyframe(m, d, 0)
+    initialize_observation_posture(m, d, specs)
     place_cube_for_blind_test(m, d, test_cube_pose)
     # Do not retain the fixture command in the controller path.  From this
     # point onward the planner can obtain the cube pose only from camera pixels.
@@ -494,8 +528,17 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
 
     planning_viewer_ctx = None
     planning_viewer = None
+    observation_keys = []
+
+    def observation_key(key):
+        if key in (glfw.KEY_R, glfw.KEY_SPACE):
+            observation_keys.append("retry")
+        elif key == glfw.KEY_C:
+            observation_keys.append("place")
+
     if not check_only:
-        planning_viewer_ctx = mujoco.viewer.launch_passive(m, d)
+        planning_viewer_ctx = mujoco.viewer.launch_passive(
+            m, d, key_callback=observation_key)
         planning_viewer = planning_viewer_ctx.__enter__()
         planning_viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
         planning_viewer.cam.distance = 1.5
@@ -519,22 +562,60 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
     # wrist to a useful observation pose.  The wrist RGB-D image then supplies
     # the final IK target.  No MuJoCo object coordinate enters either stage.
     chest_transform, chest_matrix, chest_calibration_path = load_chest_calibration()
-    chest_renderer = mujoco.Renderer(m, 480, 640)
-    chest_rgb, chest_depth = render_rgb_depth(
-        chest_renderer, d, "chest_d435i_preview")
-    chest_renderer.close()
     workspace_calibration = load_workspace_rgbd_calibration()
-    chest_observation = estimate_cube_center(
-        chest_rgb, chest_depth, np.eye(4), chest_transform,
-        chest_matrix, CUBE_HALF)
-    chest_center_raw = np.asarray(chest_observation.center_world, dtype=float)
-    chest_center = apply_workspace_rgbd_calibration(
-        chest_center_raw, workspace_calibration["chest"])
+    from visual_observation_recovery import acquire_visual_target
+
+    def observation_progress(message):
+        if planning_viewer is not None and planning_viewer.is_running():
+            planning_viewer.set_texts((None, None, message, ""))
+            planning_viewer.sync()
+
+    while True:
+        initial_target, observation_attempts = acquire_visual_target(
+            m, d, specs, fing_act, q_hold, CUBE_HALF, FINGER_OPEN,
+            chest_transform, chest_matrix, workspace_calibration,
+            progress=observation_progress if not check_only else None)
+        if initial_target is not None:
+            break
+        output = (Path(report_path) if report_path else
+                  ROOT / "outputs" / time.strftime("%Y%m%d") / "grasp_stability.json")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps({
+            "verdict": "FAIL", "failure_reason": "target_not_visible_in_robot_cameras",
+            "task_workspace": TASK_WORKSPACE_CONFIG,
+            "controller_contract": CONTROLLER_CONTRACT,
+            "observation_attempts": observation_attempts,
+        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if check_only:
+            return 1
+        print("Camera target unavailable. R/SPACE: retry; C: place cube again. "
+              "Window stays open.", flush=True)
+        observation_keys.clear()
+        while planning_viewer.is_running() and not observation_keys:
+            observation_progress(
+                "CUBE NOT VISIBLE\nR / SPACE: retry cameras\nC: place cube again\nClose window: exit")
+            for _ in range(max(1, int(0.02 / DT))):
+                apply_controller(m, d, specs, fing_act, q_hold,
+                                 {"left": FINGER_OPEN, "right": FINGER_OPEN})
+                mujoco.mj_step(m, d)
+            time.sleep(0.02)
+        if not planning_viewer.is_running():
+            close_planning_viewer()
+            return 0
+        if observation_keys[-1] == "place":
+            close_planning_viewer()
+            return 2
+        observation_keys.clear()
+    chest_observation = initial_target["observation"]
+    chest_center_raw = initial_target["raw_center"]
+    chest_center = initial_target["center"]
+    initial_target_source = initial_target["source"]
     # Keep the centre overlap on the calibrated right arm; switch only when
     # chest vision clearly places the target on the positive-Y side.
     perception_arm = "left" if chest_center[1] > 0.02 else "right"
     print(
-        f"chest perceived ({chest_center[0]:.4f}, {chest_center[1]:.4f})  "
+        f"initial camera {initial_target_source} perceived "
+        f"({chest_center[0]:.4f}, {chest_center[1]:.4f})  "
         f"mask {chest_observation.mask_pixels} px -> select {perception_arm} arm"
     )
 
@@ -545,14 +626,14 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
     side_sign = 1.0 if perception_arm == "left" else -1.0
     ready_position = body_transform(d, perception_spec.body_id)[:3, 3]
     raise_position = ready_position.copy()
-    raise_position[2] = max(float(ready_position[2]) + 0.18, 0.68)
+    raise_position[2] = np.clip(float(ready_position[2]) + 0.18, 0.68, 0.78)
     q_raise, _, _ = solve_target_q(
         m, d, perception_spec, raise_position, quat_ready,
         q_ready, target_rotation=rotation_ready)
-    q_clear, _, _ = solve_target_q(
-        m, d, perception_spec,
-        np.array([0.28, side_sign * 0.16, 0.72]), quat_ready,
-        q_raise, target_rotation=rotation_ready)
+    # The initialized high standby pose is already clear of the entire task
+    # table. Reuse it rather than solving a redundant 72 cm exit on a new IK
+    # branch; that branch could stall and add 1.5 s to every right-arm episode.
+    q_clear = q_ready.copy()
     search_position = np.array([
         np.clip(chest_center[0] - 0.19, 0.18, 0.38),
         np.clip(chest_center[1] * 0.65, -0.13, 0.13),
@@ -605,6 +686,8 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
         final_center = apply_workspace_rgbd_calibration(
             final_center_raw, workspace_calibration["wrist"][perception_arm])
         target_source = "chest_coarse_plus_selected_wrist_rgbd"
+        if initial_target_source != "chest_d435i_preview":
+            target_source = "wrist_search_recovery_plus_selected_wrist_rgbd"
         final_mask_pixels = int(observation.mask_pixels)
         print(
             f"wrist refined ({final_center[0]:.4f}, {final_center[1]:.4f})  "
@@ -617,6 +700,8 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
         final_center_raw = chest_center_raw.copy()
         final_center = chest_center.copy()
         target_source = "chest_rgbd_fallback_after_wrist_miss"
+        if initial_target_source != "chest_d435i_preview":
+            target_source = "wrist_search_recovery_fallback"
         final_mask_pixels = int(chest_observation.mask_pixels)
         print(f"wrist refinement unavailable ({exc}); using chest RGB-D target")
     # The baked friction-grasp offset was calibrated on the ready-pose IK
@@ -1063,6 +1148,8 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
             result = {
                 "scene": str(SCENE),
                 "controller_cube_pose_source": target_source,
+                "initial_target_source": initial_target_source,
+                "observation_attempts": observation_attempts,
                 "controller_contract": CONTROLLER_CONTRACT,
                 "chest_calibration": str(chest_calibration_path),
                 "chest_perceived_center_m": [float(v) for v in chest_center],
@@ -1146,6 +1233,7 @@ def main(check_only=False, post_lift_s=1.5, report_path=None,
                 "verdict": "FAIL",
             }
 
+        result["task_workspace"] = TASK_WORKSPACE_CONFIG
         output = (Path(report_path) if report_path else
                   ROOT / "outputs" / time.strftime("%Y%m%d") / "grasp_stability.json")
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -1205,6 +1293,8 @@ if __name__ == "__main__":
         if args.interactive_place_s <= 0:
             ap.error("--interactive-place-s must be positive")
         cube_test_pose = interactive_cube_placement(args.interactive_place_s)
+        if cube_test_pose is None:
+            sys.exit(0)
     if args.random_cube is not None:
         rng = np.random.default_rng(args.random_cube)
         # Fixture setup spans the tabletop.  These hidden coordinates are
@@ -1212,6 +1302,12 @@ if __name__ == "__main__":
         cube_test_pose = (rng.uniform(*TABLE_X), rng.uniform(*TABLE_Y), 0.0)
         print("blind-test fixture selected a hidden cube pose; the controller "
               "will plan from camera pixels only")
-    sys.exit(main(check_only=args.check, post_lift_s=args.post_lift_s,
-                  report_path=args.report, test_cube_pose=cube_test_pose,
-                  preview_initial_s=args.preview_initial_s))
+    while True:
+        result = main(check_only=args.check, post_lift_s=args.post_lift_s,
+                      report_path=args.report, test_cube_pose=cube_test_pose,
+                      preview_initial_s=args.preview_initial_s)
+        if result != 2:
+            sys.exit(result)
+        cube_test_pose = interactive_cube_placement(args.interactive_place_s or 86400)
+        if cube_test_pose is None:
+            sys.exit(0)

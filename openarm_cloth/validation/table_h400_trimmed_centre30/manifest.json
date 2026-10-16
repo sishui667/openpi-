@@ -1,0 +1,43 @@
+{
+  "source_fingerprint": "d21f46dc7c7cf953c08caa897231fb0d0ecd76e5e919d88aa8a1dc09cb93b99f",
+  "heights_m": [
+    0.4
+  ],
+  "positions_xy_m": [
+    [
+      0.43,
+      0.0
+    ]
+  ],
+  "yaws_deg": [
+    30.0
+  ],
+  "jobs": 1,
+  "workers": 1,
+  "default_config_modified": false,
+  "workspace_configs": {
+    "0.4": {
+      "table_center_m": [
+        0.43,
+        0.0,
+        0.38
+      ],
+      "table_half_size_m": [
+        0.123,
+        0.223,
+        0.02
+      ],
+      "placement_x_m": [
+        0.35,
+        0.51
+      ],
+      "placement_y_m": [
+        -0.18,
+        0.18
+      ],
+      "cube_half_size_m": 0.0288,
+      "support_rim_m": 0.043,
+      "note": "Table trimmed to the conservative centre-placement region plus a 43mm support rim for the rotated 57.6mm cube. 40cm top; no complete reachability guarantee."
+    }
+  }
+}

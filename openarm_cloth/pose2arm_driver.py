@@ -22,11 +22,11 @@ TWO TRAPS, both measured rather than assumed:
    drift silently: column 0 reaches -3.2960 rad and the right arm's joint1 stops
    at -1.3963 while the left reaches -3.4907, so only "left first" fits.
 
-2. Pose2Arm emits NO hand data at all, so the task book's gripper hysteresis
-   (D < 2.5 cm close, D > 4.5 cm open) has no human-side input.  Per the team
-   decision, D is taken from the simulation side: the distance from the gripper's
-   jaw midpoint to the monocularly perceived object centre.  This is a sim-side
-   substitute, not hand input, and is labelled as such wherever it is reported.
+2. The supplied Pose2Arm sample emits NO hand data. Optional hand_distance_m
+   now connects A's future fingertip signal to the task-book hysteresis.
+   Without that field, the demo uses the distance from the simulated jaw
+   midpoint to the monocularly perceived object centre. This engineering
+   proxy is NOT human fingertip input or evidence of live gesture control.
 
 Usage:
     python pose2arm_driver.py --npz <p2a.npz> --dry-run       # contract check only
@@ -77,14 +77,31 @@ RATE_GLITCH_MULTIPLE = 20.0
 
 
 def load_pose2arm(npz_path) -> dict:
-    z = np.load(npz_path, allow_pickle=False)
-    need = {"target_obs", "joint_angles", "frame_indices"}
-    missing = need - set(z.files)
-    if missing:
-        raise KeyError(f"{npz_path} is missing {sorted(missing)}; has {sorted(z.files)}")
-    return {"target_obs": z["target_obs"], "joint_angles": z["joint_angles"],
-            "frame_indices": z["frame_indices"],
-            "fps": float(z["fps"]) if "fps" in z.files else None}
+    with np.load(npz_path, allow_pickle=False) as z:
+        need = {"target_obs", "joint_angles", "frame_indices"}
+        missing = need - set(z.files)
+        if missing:
+            raise KeyError(f"{npz_path} is missing {sorted(missing)}")
+        blob = {k: z[k].copy() for k in need}
+        blob["fps"] = float(z["fps"]) if "fps" in z.files else None
+        blob["joint_order"] = str(z["joint_order"].item()) if "joint_order" in z.files else None
+        blob["hand_distance_m"] = z["hand_distance_m"].copy() if "hand_distance_m" in z.files else None
+    q = blob["joint_angles"]
+    if q.ndim != 2 or q.shape[1] != 14 or len(q) == 0:
+        raise ValueError("joint_angles must be a nonempty (F,14) array")
+    if blob["target_obs"].shape != (len(q), 18) or blob["frame_indices"].shape != (len(q),):
+        raise ValueError("target_obs/frame_indices frame count mismatch")
+    if not np.issubdtype(blob["frame_indices"].dtype, np.integer) or np.any(blob["frame_indices"] < 0):
+        raise ValueError("frame_indices must be nonnegative integers")
+    if not np.isfinite(q).all() or not np.isfinite(blob["target_obs"]).all():
+        raise ValueError("Pose2Arm contains NaN/Inf")
+    if blob["fps"] is not None and (not np.isfinite(blob["fps"]) or blob["fps"] <= 0):
+        raise ValueError("fps must be positive and finite")
+    distances = blob["hand_distance_m"]
+    if distances is not None and (distances.shape != (len(q),) or
+                                 np.any(np.isinf(distances)) or np.any(distances < 0)):
+        raise ValueError("hand_distance_m must be (F,), nonnegative, NaN for missing")
+    return blob
 
 
 def verify_joint_order(joint_angles) -> tuple[str, str]:
@@ -116,7 +133,7 @@ class GripperHysteresis:
     state: str = "open"
 
     def update(self, d_m: float | None) -> float:
-        if d_m is None:
+        if d_m is None or not np.isfinite(d_m):
             return FINGER_OPEN_Q if self.state == "open" else FINGER_CLOSED_Q
         if d_m < CLOSE_BELOW_M:
             self.state = "closed"
@@ -143,6 +160,7 @@ class DriverReport:
     gripper: dict = field(default_factory=lambda: {"closed": 0, "open": 0})
     source_max_step_rad: dict = field(default_factory=dict)
     ratio_to_20hz_limit: dict = field(default_factory=dict)
+    ratio_to_control_hz_limit: dict = field(default_factory=dict)
     ratio_to_source_fps_limit: dict = field(default_factory=dict)
     notes: list = field(default_factory=list)
 
@@ -155,7 +173,8 @@ class Pose2ArmDriver:
     """
 
     def __init__(self, model, data, npz_path, arm="right", control_hz=20.0,
-                 vel_limits=POSE2ARM_VEL_LIMITS, object_centre_fn=None):
+                 vel_limits=POSE2ARM_VEL_LIMITS, object_centre_fn=None,
+                 joint_order=None):
         self.m = model
         self.d = data
         self.blob = load_pose2arm(npz_path)
@@ -163,16 +182,29 @@ class Pose2ArmDriver:
         self.other = "left" if arm == "right" else "right"
         self.control_hz = float(control_hz)
         self.vel_limits = np.asarray(vel_limits, dtype=float)
+        if not np.isfinite(self.control_hz) or self.control_hz <= 0:
+            raise ValueError("control_hz must be positive and finite")
+        if self.vel_limits.shape != (7,) or not np.isfinite(self.vel_limits).all() or np.any(self.vel_limits <= 0):
+            raise ValueError("vel_limits must contain seven positive finite values")
         self.object_centre_fn = object_centre_fn
 
         self.specs = build_arm_specs(model)
         self.finger_act = build_finger_actuators(model)
+        from member_b_actuators import ActuatorController
+        self.controller = ActuatorController(model, data)
         geom_id = lambda n: mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, n)  # noqa: E731
         self.finger_geoms = tuple(geom_id(f"openarm_{arm}_{s}_finger_collision")
                                   for s in ("right", "left"))
         self.hysteresis = GripperHysteresis()
 
         self.order, self.order_evidence = verify_joint_order(self.blob["joint_angles"])
+        declared = joint_order or self.blob["joint_order"]
+        if declared is not None:
+            if declared not in ("left-first", "right-first"):
+                raise ValueError("joint_order must be left-first or right-first")
+            if self.order not in ("ambiguous", declared):
+                raise ValueError("declared joint order contradicts joint-limit evidence")
+            self.order, self.order_evidence = declared, "explicit NPZ/API joint_order contract"
         if self.order == "left-first":
             self.cols = {"left": slice(0, 7), "right": slice(7, 14)}
         elif self.order == "right-first":
@@ -193,6 +225,10 @@ class Pose2ArmDriver:
                 f"{arm}_joint{i + 1}": float(value) for i, value in enumerate(maxima)
             }
             self.report.ratio_to_20hz_limit = {
+                f"{arm}_joint{i + 1}": float(value / (self.vel_limits[i] / 20.0))
+                for i, value in enumerate(maxima)
+            }
+            self.report.ratio_to_control_hz_limit = {
                 f"{arm}_joint{i + 1}": float(value / (self.vel_limits[i] / self.control_hz))
                 for i, value in enumerate(maxima)
             }
@@ -203,7 +239,10 @@ class Pose2ArmDriver:
                 }
         self.dt = float(model.opt.timestep)
         self.steps_per_frame = max(1, int(round(1.0 / (self.control_hz * self.dt))))
-        self._prev_q = None
+        if abs(self.steps_per_frame * self.dt - 1.0 / self.control_hz) > 1e-8:
+            raise ValueError("control period must be an integer number of physics timesteps")
+        self._prev_q = data.qpos[self.specs[arm].qpos].copy()
+        self._inactive_hold = data.qpos[self.specs[self.other].qpos].copy()
 
     # ---- joint-limit guard -------------------------------------------------
     def _clamp(self, side, q):
@@ -248,7 +287,7 @@ class Pose2ArmDriver:
     def joint_targets(self, i):
         q = {self.arm: self.blob["joint_angles"][i, self.cols[self.arm]]}
         # the other arm holds whatever pose it is already in
-        q[self.other] = self.d.qpos[self.specs[self.other].qpos].copy()
+        q[self.other] = self._inactive_hold.copy()
         return q
 
     def jaw_distance(self):
@@ -267,9 +306,12 @@ class Pose2ArmDriver:
                      + self.d.geom_xpos[self.finger_geoms[1]])
         return float(np.linalg.norm(mid - np.asarray(centre)))
 
-    def step_frame(self, i):
+    def prepare_frame(self, i, perceived_center=None):
+        """Decode one NPZ row into bounded actuator targets, without stepping."""
         if self.report.estop:
-            return
+            return None
+        if not 0 <= i < self.report.frames:
+            raise IndexError(i)
         raw = self.joint_targets(i)
         q = {self.arm: self._clamp(self.arm, raw[self.arm]),
              self.other: raw[self.other]}
@@ -284,23 +326,35 @@ class Pose2ArmDriver:
                     f"frame {i}: joint step exceeds {RATE_GLITCH_MULTIPLE:.0f}x the URDF "
                     f"velocity limit at {self.control_hz:.0f} Hz -- data fault, not motion")
                 self.report.estop_frame = int(i)
-                return
+                return None
         self._prev_q = q[self.arm].copy()
 
-        finger = self.hysteresis.update(self.jaw_distance())
+        distances = self.blob["hand_distance_m"]
+        if distances is not None:
+            distance = distances[i]
+        elif perceived_center is not None:
+            mid = 0.5 * (self.d.geom_xpos[self.finger_geoms[0]] + self.d.geom_xpos[self.finger_geoms[1]])
+            distance = float(np.linalg.norm(mid - perceived_center))
+        else:
+            distance = self.jaw_distance()
+        finger = self.hysteresis.update(distance)
         self.report.gripper["closed" if finger == FINGER_CLOSED_Q else "open"] += 1
+        return q, {self.arm: finger, self.other: FINGER_OPEN_Q}
+
+    def step_frame(self, i):
+        command = self.prepare_frame(i)
+        if command is None:
+            return
+        q, fingers = command
+        self.controller.set_targets(q, fingers)
         for _ in range(self.steps_per_frame):
-            apply_controller(self.m, self.d, self.specs, self.finger_act,
-                             q, {s: finger for s in ("left", "right")})
+            self.controller.apply()
             mujoco.mj_step(self.m, self.d)
 
 
 def build_scene():
-    import mujoco as mj
-    m = mj.MjModel.from_xml_path(str(SCENE))
-    d = mj.MjData(m)
-    mj.mj_resetDataKeyframe(m, d, 0)
-    return m, d
+    from member_b_scene import build_scene as current_scene
+    return current_scene()
 
 
 def dry_run(npz_path) -> int:
@@ -318,7 +372,7 @@ def dry_run(npz_path) -> int:
     return 0 if order in ("left-first", "right-first") else 1
 
 
-def play(npz_path, arm, max_frames=None, report_path=None) -> int:
+def play(npz_path, arm, max_frames=None, report_path=None, control_hz=20.0) -> int:
     from workspace_camera import CAM_NAME, H, W, perceive
 
     m, d = build_scene()
@@ -340,7 +394,8 @@ def play(npz_path, arm, max_frames=None, report_path=None) -> int:
             pose = perceive(m, d, renderer=renderer, verbose=False)[0]
             return None if pose is None else pose["center"]
 
-        driver = Pose2ArmDriver(m, d, npz_path, arm=arm, object_centre_fn=perceived_centre)
+        driver = Pose2ArmDriver(m, d, npz_path, arm=arm, control_hz=control_hz,
+                               object_centre_fn=perceived_centre)
         print(f"npz        {npz_path}")
         print(f"  order    {driver.order} ({driver.order_evidence})")
         print(f"  driving  {arm} arm only; the other holds its home pose")
@@ -411,4 +466,4 @@ if __name__ == "__main__":
                     help="write a JSON validation report (play mode only)")
     a = ap.parse_args()
     sys.exit(dry_run(a.npz) if a.dry_run
-             else play(a.npz, a.arm, a.max_frames, a.report))
+             else play(a.npz, a.arm, a.max_frames, a.report, a.control_hz))

@@ -1,0 +1,9 @@
+{
+  "table_center_m": [0.43, 0.0, 0.38],
+  "table_half_size_m": [0.123, 0.223, 0.02],
+  "placement_x_m": [0.35, 0.51],
+  "placement_y_m": [-0.18, 0.18],
+  "cube_half_size_m": 0.0288,
+  "support_rim_m": 0.043,
+  "note": "40cm top, trimmed 24.6x44.6cm physical table, 16x36cm centre-placement region plus 43mm support rim. 19 sampled grasps passed after trimming; no complete reachability guarantee."
+}

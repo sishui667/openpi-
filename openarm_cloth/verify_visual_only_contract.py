@@ -17,10 +17,11 @@ from demo_grasp_viewer import (
 from handeye_grasp_red_cube import estimate_cube_center, finger_joint_indices
 from teleop_towel_dataset import build_arm_specs
 from visual_grasp_planner import plan_face_grasp
+from task_workspace import load_task_model, TABLE_TOP
 
 
 def verify():
-    model = mujoco.MjModel.from_xml_path(str(SCENE))
+    model = load_task_model(SCENE)
     data = mujoco.MjData(model)
     mujoco.mj_resetDataKeyframe(model, data, 0)
     mujoco.mj_forward(model, data)
@@ -32,7 +33,8 @@ def verify():
     args = dict(
         model=model, data=data, spec=spec, finger_geoms=fingers,
         finger_indices=finger_joint_indices(model, "right"),
-        proxies=PAD_CONTACT_PROXY_LOCAL, center=np.array([0.365, -0.060, 0.385]),
+        proxies=PAD_CONTACT_PROXY_LOCAL,
+        center=np.array([0.365, -0.060, TABLE_TOP + CUBE_HALF]),
         yaw=np.pi / 4, seed=seed, clear_q=seed, finger_open=FINGER_OPEN,
         approach_height=0.07, transit_height=0.16,
     )
@@ -44,7 +46,7 @@ def verify():
     assert delta_hidden < 1e-12, "Hidden cube pose changed planned actions"
     assert first["candidates"] == hidden_changed["candidates"]
 
-    args["center"] = np.array([0.405, -0.060, 0.385])
+    args["center"] = np.array([0.405, -0.060, TABLE_TOP + CUBE_HALF])
     visual_changed = plan_face_grasp(**args)
     delta_visual = float(np.max(np.abs(
         first["q_grasp"] - visual_changed["q_grasp"])))

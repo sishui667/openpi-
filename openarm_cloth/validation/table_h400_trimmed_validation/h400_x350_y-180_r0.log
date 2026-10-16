@@ -1,0 +1,44 @@
+Table 24.6 x 44.6 cm | top 40.0 cm
+Cube centre stays inside the amber outline
+initial camera chest_d435i_preview perceived (0.3494, -0.1801)  mask 8583 px -> select right arm
+chest-guided wrist observation TCP: [ 0.18  -0.117  0.6  ] m
+wrist refined (0.3492, -0.1815)  mask 2871 px (right-wrist RGB-D)
+final visual target (0.3492, -0.1815) from chest_coarse_plus_selected_wrist_rgbd
+cube 57.6 mm  1.766 N  mu 1.00 -> friction needs 0.883 N/finger
+face candidate 0 sign +1: centre 6.3 mm, axis 57.6 mm, path penetration 16.5 mm
+face candidate 0 sign -1: centre 2.0 mm, axis 17.6 mm, path penetration 0.0 mm
+face candidate 1 sign +1: centre 0.5 mm, axis 8.7 mm, path penetration 0.0 mm
+face candidate 1 sign -1: centre 0.7 mm, axis 2.0 mm, path penetration 0.0 mm
+selected object_face_1_-1, visual yaw +0.25 deg, physical open span 98.8 mm
+evaluation-only perception error 1.70 mm (read after planning was frozen)
+
+--check: running the grasp headless.
+
+pregrasp visual correction 2.30 mm from 2 usable views
+pre-contact cube displacement: clear 0.00 mm, transit 0.00 mm, total 0.00 mm, descent 0.00 mm
+joint convergence rad: clear 0.0050, transit 0.0150, approach 0.0106, grasp 0.0119, close 0.0114
+      close joint error deg [-0.25 -0.14 -0.   -0.16 -0.05 -0.24 -0.63]
+      active arm torque [ 7.81  0.48  3.35  0.31 -0.09 -0.07 -0.24] limits [40. 40. 27. 27.  7.  7.  7.]
+      finger qpos m [0.03062 0.03061] finger actuator force [-3.062 -3.061]
+opposing-face evaluation: {'opposing_faces': True, 'interior_face_contacts': 3, 'edge_or_corner_contacts': 0, 'minimum_face_margin_mm': 14.823190756351531}
+      jaw origins relative to cube [[-6.2, -48.7, 44.9], [-4.9, 47.6, 46.0]] mm
+grip: 3 contacts  6.123 N (3.061 N/finger vs 0.883 needed)
+      pads off the object centre by 11.3 mm
+      contact 1: object-local [-12.7 -28.8  -2.3] mm -> face (1 surface axes)
+      contact 2: object-local [  0.9 -28.8 -14. ] mm -> face (1 surface axes)
+      contact 3: object-local [11.9 28.8 -1.4] mm -> face (1 surface axes)
+      contact patch in openarm_right_right_finger_collision: [  5.22 -19.4   47.55] mm
+      contact patch in openarm_right_right_finger_collision: [ 2.66 -8.91 61.86] mm
+      contact patch in openarm_right_left_finger_collision: [-6.3   3.63 53.19] mm
+      contact normal forces [1.521 1.672 2.96 ] N (sum 6.153); tangential [0.583 0.483 0.349] N
+lift joint delta deg [13.   2.6  0.3  5.  -0.3  2.6 13.3]
+prelift/lift convergence error 0.0110/0.0103 rad
+
+cube z 428.6 -> 502.6 mm   lift +74.0 mm  -> LIFTED
+displaced sideways 0.5 mm
+held by friction alone: 5 contacts, 6.109 N. Nothing is welded.
+stability: final/max rotation 0.57/0.79 deg, peak angular speed 0.209 rad/s
+           max gripper rotation from grasp pose 0.90 deg
+           minimum summed contact-normal force while held 5.985 N
+task gate: jaw-object 9.9 mm final, 15.9 mm max; success held 4.103 s; episode 14.165 s -> PASS
+wrote D:\openpi\openarm_cloth\outputs\20261016\table_h400_trimmed_validation\h400_x350_y-180_r0.json

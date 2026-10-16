@@ -1,4 +1,5 @@
 """Blind fixture regressions: positions/yaws are not passed to the planner."""
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -17,10 +18,23 @@ CASES = [
 
 
 def main():
-    folder = ROOT / "outputs" / time.strftime("%Y%m%d") / "face_grasp_regression"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--case-set", choices=("compact-table", "legacy"),
+                        default="compact-table")
+    args = parser.parse_args()
+    cases = CASES
+    if args.case_set == "compact-table":
+        from task_workspace import TABLE_X, TABLE_Y, TABLE_TOP
+        cases = [(f"corner_{ix}_{iy}_{yaw}", x, y, yaw)
+                 for ix, x in enumerate(TABLE_X)
+                 for iy, y in enumerate(TABLE_Y) for yaw in (0, 45)]
+        cases.append(("centre_30", sum(TABLE_X) / 2, 0, 30))
+    folder = (ROOT / "outputs" / time.strftime("%Y%m%d") /
+              (f"task_table_regression_h{TABLE_TOP*1000:.0f}" if args.case_set == "compact-table"
+               else "legacy_large_table_positions"))
     folder.mkdir(parents=True, exist_ok=True)
     summary = []
-    for name, x, y, yaw in CASES:
+    for name, x, y, yaw in cases:
         report = folder / f"{name}.json"
         process = subprocess.run([
             sys.executable, "-u", str(ROOT / "demo_grasp_viewer.py"),

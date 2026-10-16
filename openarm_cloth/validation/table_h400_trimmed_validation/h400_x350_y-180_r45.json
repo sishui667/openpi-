@@ -1,0 +1,230 @@
+{
+  "scene": "D:\\openpi\\openarm_cloth\\simulation\\v1\\droid_cube_scene_perception.xml",
+  "controller_cube_pose_source": "chest_coarse_plus_selected_wrist_rgbd",
+  "initial_target_source": "chest_d435i_preview",
+  "observation_attempts": [
+    {
+      "camera": "chest_d435i_preview",
+      "status": "detected",
+      "mask_pixels": 10085
+    }
+  ],
+  "controller_contract": {
+    "allowed_inputs": [
+      "chest_rgb",
+      "chest_depth",
+      "selected_wrist_rgb",
+      "selected_wrist_depth",
+      "joint_state",
+      "camera_intrinsics",
+      "chest_extrinsic",
+      "wrist_handeye_transform"
+    ],
+    "forbidden_planner_inputs": [
+      "mujoco_body_xpos",
+      "fixture_cube_pose",
+      "renderer_segmentation_id"
+    ],
+    "grasp_constraint": "contact_and_friction_only_no_weld"
+  },
+  "chest_calibration": "D:\\openpi\\openarm_cloth\\calibration\\auto_chest\\session_20260924_115906_911\\calibration_chest.json",
+  "chest_perceived_center_m": [
+    0.3428288979422716,
+    -0.17492915492762548,
+    0.4289306631930911
+  ],
+  "selected_arm": "right",
+  "oracle_read_after_planning": true,
+  "perceived_center_m": [
+    0.344130324375022,
+    -0.18138087224785288,
+    0.42862961603404054
+  ],
+  "perception_iou": 1.0,
+  "perception_error_mm_evaluation_only": 6.029939846365917,
+  "preclose_cube_displacement_mm_evaluation_only": 0.0001615892162852851,
+  "descent_cube_displacement_mm_evaluation_only": 4.4037920904396934e-05,
+  "grasp_axis": "object_face_1_+1",
+  "perceived_yaw_deg": 44.95049285888672,
+  "closing_direction_world": [
+    -0.7064955327632291,
+    0.7077175016810034,
+    0.0
+  ],
+  "face_plan_candidates": [
+    {
+      "face_index": 0,
+      "sign": 1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        0.7077175016810034,
+        0.7064955327632291,
+        0.0
+      ],
+      "score": 0.11634288880497981,
+      "max_new_penetration_mm": 0.0,
+      "distal_down_cosine": 0.961769843953264,
+      "midpoint_error_m": 0.0017645854409678002,
+      "perpendicular_error_m": 0.01973940687906036,
+      "separation_m": 0.09678502547717369
+    },
+    {
+      "face_index": 0,
+      "sign": -1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        -0.7077175016810034,
+        -0.7064955327632291,
+        -0.0
+      ],
+      "score": 0.0952673409461207,
+      "max_new_penetration_mm": 0.0,
+      "distal_down_cosine": 0.9166888415561438,
+      "midpoint_error_m": 0.0015888777858353025,
+      "perpendicular_error_m": 0.015875712617553536,
+      "separation_m": 0.09749331817842233
+    },
+    {
+      "face_index": 1,
+      "sign": 1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        -0.7064955327632291,
+        0.7077175016810034,
+        0.0
+      ],
+      "score": 0.02746020894757342,
+      "max_new_penetration_mm": 0.0,
+      "distal_down_cosine": 0.9662052094597877,
+      "midpoint_error_m": 0.0005869912409709748,
+      "perpendicular_error_m": 0.004318059307572735,
+      "separation_m": 0.09868302642486465
+    },
+    {
+      "face_index": 1,
+      "sign": -1.0,
+      "downward_weight": 0.8,
+      "direction": [
+        0.7064955327632291,
+        -0.7077175016810034,
+        -0.0
+      ],
+      "score": 0.10461673884878026,
+      "max_new_penetration_mm": 0.0,
+      "distal_down_cosine": 0.8898469989073673,
+      "midpoint_error_m": 0.0015618186779388535,
+      "perpendicular_error_m": 0.017799710413878345,
+      "separation_m": 0.09716046340840659
+    }
+  ],
+  "pregrasp_visual_correction_mm": 0.0,
+  "contact_quality_at_grip": {
+    "opposing_faces": true,
+    "interior_face_contacts": 3,
+    "edge_or_corner_contacts": 0,
+    "minimum_face_margin_mm": 10.498848882027147
+  },
+  "contact_points_object_mm": [
+    [
+      -18.30115111797285,
+      28.78739837881272,
+      -6.6905194174143645
+    ],
+    [
+      3.642454341606696,
+      28.805462006445303,
+      2.3597776962624706
+    ],
+    [
+      -3.6414611780551085,
+      -28.749092473949723,
+      -15.171672703222782
+    ]
+  ],
+  "contact_points_finger_local_mm": [
+    {
+      "geom": "openarm_right_right_finger_collision",
+      "point_mm": [
+        6.327710836536335,
+        3.628435386373677,
+        53.19811799259678
+      ]
+    },
+    {
+      "geom": "openarm_right_right_finger_collision",
+      "point_mm": [
+        5.2287800008124865,
+        -19.401463605434667,
+        47.554880610423204
+      ]
+    },
+    {
+      "geom": "openarm_right_left_finger_collision",
+      "point_mm": [
+        -2.6373574855659934,
+        -8.912011648899902,
+        61.85100543703068
+      ]
+    }
+  ],
+  "contacts_at_grip": 3,
+  "contacts_final": 3,
+  "grip_force_n": 6.108146064259352,
+  "required_force_per_finger_n": 0.8829,
+  "contact_normal_at_grip_n": [
+    1.7143635899860894,
+    1.7912858065412998,
+    2.6769950442630965
+  ],
+  "contact_tangential_at_grip_n": [
+    0.2619805692596172,
+    0.06287516403872127,
+    0.9420665691096254
+  ],
+  "min_contact_normal_total_n": 6.0257738935363285,
+  "lift_mm": 72.28077210456175,
+  "sideways_displacement_mm": 1.5831677644996907,
+  "orientation_final_deg": 1.4847358221095028,
+  "orientation_max_deg": 2.354503205778318,
+  "gripper_orientation_max_deg": 2.065053355385047,
+  "peak_angular_speed_rad_s": 0.24879052222553238,
+  "jaw_object_distance_final_mm": 12.848932466969172,
+  "jaw_object_distance_max_mm": 15.450317993972943,
+  "success_continuous_s": 3.026000000000178,
+  "episode_sim_s": 14.05149999997614,
+  "post_lift_hold_s": 1.5,
+  "joint_convergence_rad": {
+    "clear": 0.005023491798225491,
+    "transit": 0.014983358318285456,
+    "approach": 0.01498010245780268,
+    "grasp": 0.012910857355628469,
+    "close": 0.009820677408380218,
+    "prelift": 0.010435436031652756,
+    "lift": 0.010463837930584696
+  },
+  "verdict": "PASS",
+  "criteria": "opposing interior face contacts, lift>30mm, jaw-object<20mm continuously>=0.5s, episode<=15s",
+  "task_workspace": {
+    "table_center_m": [
+      0.43,
+      0.0,
+      0.38
+    ],
+    "table_half_size_m": [
+      0.123,
+      0.223,
+      0.02
+    ],
+    "placement_x_m": [
+      0.35,
+      0.51
+    ],
+    "placement_y_m": [
+      -0.18,
+      0.18
+    ],
+    "cube_half_size_m": 0.0288,
+    "support_rim_m": 0.043,
+    "note": "Table trimmed to the conservative centre-placement region plus a 43mm support rim for the rotated 57.6mm cube. 40cm top; no complete reachability guarantee."
+  }
+}

@@ -17,10 +17,9 @@ centroid lands about a cube-width from the true centre (measured 30.07 mm vs
 Nothing here reads d.xpos to form an estimate.  Ground truth is read only by the
 self-check in __main__, to score the estimator.
 
-Scene constants (cube size, table height, camera name, camera pose) are read from
-simulation/v1/droid_cube_scene_perception.json, which
-build_droid_cube_perception_scene.py writes.  Single source of truth: if the
-scene changes, the perception follows or refuses to run.
+Cube and camera constants come from the frozen perception scene JSON. Table
+height comes from task_workspace.json, matching the CURRENT compiled task
+scene rather than the older base XML table. No object state supplies a target.
 """
 from __future__ import annotations
 
@@ -32,6 +31,7 @@ from pathlib import Path
 import cv2
 import mujoco
 import numpy as np
+from task_workspace import TABLE_TOP as TASK_TABLE_TOP
 
 ROOT = Path(__file__).resolve().parent
 SCENE_DIR = ROOT / "simulation" / "v1"
@@ -48,7 +48,7 @@ def scene_constants():
     cfg = json.loads(SCENE_JSON.read_text(encoding="utf-8"))
     return {
         "half": float(cfg["object"]["half_size_m"][0]),
-        "table_top": float(cfg["table"]["top_z"]),
+        "table_top": float(TASK_TABLE_TOP),
         "cam_name": cfg["camera"]["name"],
         "cam_pos": np.array(cfg["camera"]["pos"], dtype=float),
         "cam_quat": np.array(cfg["camera"]["quat"], dtype=float),
@@ -216,6 +216,7 @@ REFINE_MARGIN_M = 0.012
 # PROFILE is set; it costs two clock reads per stage and nothing else.
 PROFILE = False
 LAST_PROFILE = {}
+TRACKING_STATS = {"stationary_current_mask_validated": 0, "local_fits": 0, "global_fallbacks": 0}
 
 
 def _tick(key, t0):
@@ -320,6 +321,16 @@ def fit_tracking(cam, mask, previous, min_iou=0.70):
     a poor score triggers the original global search, so recovery is explicit.
     """
     x, y, yaw = (float(previous[0]), float(previous[1]), float(previous[2]))
+    # Validate against the CURRENT image before reusing a stationary estimate.
+    # No robot/object ground truth is consulted. Motion or occlusion reduces
+    # silhouette IoU and triggers the original local/global fitting path.
+    area = int(np.count_nonzero(mask))
+    if area:
+        previous_iou = iou(cam, mask, x, y, yaw, area)
+        if previous_iou >= 0.97:
+            TRACKING_STATS["stationary_current_mask_validated"] += 1
+            return (x, y, yaw), previous_iou, False
+    TRACKING_STATS["local_fits"] += 1
     best, score = fit(
         cam, mask, step=0.004, yaw_deg=3.0, topk=12,
         search_x=(x - 0.016, x + 0.016 + 1e-9),
@@ -329,6 +340,7 @@ def fit_tracking(cam, mask, previous, min_iou=0.70):
     if best is not None and score >= min_iou:
         return best, score, False
     best, score = fit(cam, mask)
+    TRACKING_STATS["global_fallbacks"] += 1
     return best, score, True
 
 
@@ -372,9 +384,8 @@ def perceive(model, data, renderer=None, verbose=False):
 def main() -> int:
     import time
 
-    m = mujoco.MjModel.from_xml_path(str(SCENE_XML))
-    d = mujoco.MjData(m)
-    mujoco.mj_resetDataKeyframe(m, d, 0)
+    from member_b_scene import build_scene
+    m, d = build_scene()
     while d.time < 2.0:
         mujoco.mj_step(m, d)
     ob = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_BODY, "droid_object")

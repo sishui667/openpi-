@@ -1,0 +1,2 @@
+# Frozen manifests hash exact bytes: do not rewrite newlines on checkout.
+* -text

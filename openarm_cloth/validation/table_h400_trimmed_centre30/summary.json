@@ -1,0 +1,25 @@
+[
+  {
+    "case": "h400_x430_y+0_r30",
+    "table_top_m": 0.4,
+    "fixture_xy_yaw": [
+      0.43,
+      0.0,
+      30.0
+    ],
+    "verdict": "PASS",
+    "lifted_with_opposing_faces": true,
+    "failure_reason": null,
+    "returncode": 0,
+    "lift_mm": 69.87846003334892,
+    "rotation_max_deg": 3.0609440854153744,
+    "episode_sim_s": 14.015499999975969,
+    "perception_error_mm_evaluation_only": 4.855935566165341,
+    "controller_source": "chest_coarse_plus_selected_wrist_rgbd",
+    "arm": "right",
+    "wall_s": 31.05983809999998,
+    "report": "D:\\openpi\\openarm_cloth\\outputs\\20261016\\table_h400_trimmed_centre30\\h400_x430_y+0_r30.json",
+    "source_fingerprint": "d21f46dc7c7cf953c08caa897231fb0d0ecd76e5e919d88aa8a1dc09cb93b99f",
+    "config_fingerprint": "6b025da7c1d44856cd1a1a58834c795fd0a3f34813891e0cee100d0ded426cf7"
+  }
+]

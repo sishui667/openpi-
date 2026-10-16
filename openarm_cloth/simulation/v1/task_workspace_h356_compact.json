@@ -1,0 +1,8 @@
+{
+  "table_center_m": [0.42, 0.0, 0.336],
+  "table_half_size_m": [0.14, 0.18, 0.02],
+  "placement_x_m": [0.33, 0.51],
+  "placement_y_m": [-0.13, 0.13],
+  "cube_half_size_m": 0.0288,
+  "note": "Retained former default: 35.6cm top, 28x36cm physical table, 18x26cm centre-placement region."
+}

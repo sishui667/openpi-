@@ -1,0 +1,9 @@
+{
+  "table_center_m": [0.40, 0.0, 0.38],
+  "table_half_size_m": [0.123, 0.223, 0.02],
+  "placement_x_m": [0.32, 0.48],
+  "placement_y_m": [-0.18, 0.18],
+  "cube_half_size_m": 0.0288,
+  "support_rim_m": 0.043,
+  "note": "Layout experiment only: same trimmed table shifted 30mm toward robot; not a validated default."
+}
