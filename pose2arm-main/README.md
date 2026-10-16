@@ -1,5 +1,7 @@
 # pose2arm
 
+> Local A/B integration (2026-10-16): the current MuJoCo path uses offline IK/trajectory optimization plus human gripper signals, not a verified PPO deployment. `member_b_export.py` exports a single original/mirror clip at the receiving control rate without time stretching. See [integration status and limitations](../openarm_cloth/docs/member_AB_integration_20261016.md). The B sliding-gripper scene remains unchanged; rotary finger radians are not copied into it.
+
 Real-time human arm motion retargeting onto a dual [OpenArm v2.0](https://github.com/OpenRobotLab/openarm) robot,
 driven by a PPO policy trained in [Isaac Lab](https://isaac-sim.github.io/IsaacLab/).
 

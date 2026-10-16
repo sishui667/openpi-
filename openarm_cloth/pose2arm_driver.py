@@ -22,11 +22,10 @@ TWO TRAPS, both measured rather than assumed:
    drift silently: column 0 reaches -3.2960 rad and the right arm's joint1 stops
    at -1.3963 while the left reaches -3.4907, so only "left first" fits.
 
-2. The supplied Pose2Arm sample emits NO hand data. Optional hand_distance_m
-   now connects A's future fingertip signal to the task-book hysteresis.
-   Without that field, the demo uses the distance from the simulated jaw
-   midpoint to the monocularly perceived object centre. This engineering
-   proxy is NOT human fingertip input or evidence of live gesture control.
+2. Current A outputs gripper_position / gripper_cmd, with RIGHT first even
+   though joint_angles is LEFT first. These normalized closure signals are
+   mapped to this model's sliding fingers, never copied as rotary-joint radians.
+   Missing human data defaults to OPEN; the old sim-distance proxy is opt-in.
 
 Usage:
     python pose2arm_driver.py --npz <p2a.npz> --dry-run       # contract check only
@@ -86,6 +85,10 @@ def load_pose2arm(npz_path) -> dict:
         blob["fps"] = float(z["fps"]) if "fps" in z.files else None
         blob["joint_order"] = str(z["joint_order"].item()) if "joint_order" in z.files else None
         blob["hand_distance_m"] = z["hand_distance_m"].copy() if "hand_distance_m" in z.files else None
+        for key in ("gripper_position", "gripper_cmd", "timestamps_s"):
+            blob[key] = z[key].copy() if key in z.files else None
+        for key in ("gripper_order", "gripper_semantics", "source_clip", "processing_mode"):
+            blob[key] = str(z[key].item()) if key in z.files else None
     q = blob["joint_angles"]
     if q.ndim != 2 or q.shape[1] != 14 or len(q) == 0:
         raise ValueError("joint_angles must be a nonempty (F,14) array")
@@ -101,6 +104,23 @@ def load_pose2arm(npz_path) -> dict:
     if distances is not None and (distances.shape != (len(q),) or
                                  np.any(np.isinf(distances)) or np.any(distances < 0)):
         raise ValueError("hand_distance_m must be (F,), nonnegative, NaN for missing")
+    for key in ("gripper_position", "gripper_cmd"):
+        grip = blob[key]
+        if grip is not None:
+            if (grip.shape != (len(q), 2) or not np.isfinite(grip).all()
+                    or np.any((grip < 0) | (grip > 1))):
+                raise ValueError(f"{key} must be finite normalized (F,2), 0=open, 1=closed")
+            if key == "gripper_cmd" and not np.isin(grip, [0,1]).all():
+                raise ValueError("gripper_cmd must be binary")
+    if blob["gripper_order"] not in (None, "right-first", "left-first"):
+        raise ValueError("invalid gripper_order")
+    if blob["gripper_semantics"] not in (None, "normalized_closure_0_open_1_closed"):
+        raise ValueError("unsupported gripper semantics; do not feed radians/metres as closure")
+    timestamps = blob["timestamps_s"]
+    if timestamps is not None and (timestamps.shape != (len(q),)
+            or not np.isfinite(timestamps).all() or timestamps[0] < 0
+            or np.any(np.diff(timestamps) <= 0)):
+        raise ValueError("timestamps_s must be strictly increasing finite seconds")
     return blob
 
 
@@ -163,6 +183,9 @@ class DriverReport:
     ratio_to_control_hz_limit: dict = field(default_factory=dict)
     ratio_to_source_fps_limit: dict = field(default_factory=dict)
     notes: list = field(default_factory=list)
+    gripper_source: str = "unavailable"
+    gripper_order: str | None = None
+    clip_boundaries: list = field(default_factory=list)
 
 
 class Pose2ArmDriver:
@@ -174,7 +197,7 @@ class Pose2ArmDriver:
 
     def __init__(self, model, data, npz_path, arm="right", control_hz=20.0,
                  vel_limits=POSE2ARM_VEL_LIMITS, object_centre_fn=None,
-                 joint_order=None):
+                 joint_order=None, gripper_mode="auto"):
         self.m = model
         self.d = data
         self.blob = load_pose2arm(npz_path)
@@ -196,6 +219,18 @@ class Pose2ArmDriver:
         self.finger_geoms = tuple(geom_id(f"openarm_{arm}_{s}_finger_collision")
                                   for s in ("right", "left"))
         self.hysteresis = GripperHysteresis()
+        if arm not in ("left", "right") or gripper_mode not in ("auto", "human-only", "sim-proxy"):
+            raise ValueError("invalid arm or gripper_mode")
+        self.gripper_mode = gripper_mode
+        self.gripper_source = (
+            "sim-proxy" if gripper_mode == "sim-proxy" else
+            "gripper_position" if self.blob["gripper_position"] is not None else
+            "gripper_cmd" if self.blob["gripper_cmd"] is not None else
+            "hand_distance_m" if self.blob["hand_distance_m"] is not None else "unavailable")
+        if gripper_mode == "human-only" and self.gripper_source == "unavailable":
+            raise ValueError("human-only mode requires A gripper_position, gripper_cmd or hand_distance_m")
+        self.gripper_order = self.blob["gripper_order"] or "right-first"
+        self.gripper_col = (0 if arm == "right" else 1) if self.gripper_order == "right-first" else (0 if arm == "left" else 1)
 
         self.order, self.order_evidence = verify_joint_order(self.blob["joint_angles"])
         declared = joint_order or self.blob["joint_order"]
@@ -217,8 +252,22 @@ class Pose2ArmDriver:
         self.report = DriverReport(frames=len(self.blob["frame_indices"]),
                                    order=self.order, order_evidence=self.order_evidence,
                                    arm=arm)
+        self.report.gripper_source = self.gripper_source
+        self.report.gripper_order = self.gripper_order
+        self.report.clip_boundaries = (np.flatnonzero(np.diff(self.blob["frame_indices"]) <= 0)+1).tolist()
+        if self.report.clip_boundaries:
+            self.report.notes.append("Multiple augmentation clips: not one continuous motion; export one clip for execution.")
+        if self.blob["fps"] and abs(self.blob["fps"]-self.control_hz) > 1e-6:
+            self.report.notes.append("Source fps differs from control rate: direct row replay stretches time; use A member_b_export.py.")
+        if self.gripper_source == "unavailable":
+            self.report.notes.append("No human gripper signal: OPEN, no automatic object-distance substitute.")
+        if self.blob["timestamps_s"] is not None and len(self.blob["timestamps_s"]) > 1:
+            if not np.allclose(np.diff(self.blob["timestamps_s"]), 1/self.control_hz, atol=1e-8):
+                raise ValueError("NPZ timestamps do not match control_hz; export/resample first")
         source_q = np.asarray(self.blob["joint_angles"][:, self.cols[arm]], dtype=float)
         source_steps = np.abs(np.diff(source_q, axis=0))
+        if self.report.clip_boundaries:
+            source_steps = np.delete(source_steps, np.asarray(self.report.clip_boundaries)-1, axis=0)
         if len(source_steps):
             maxima = source_steps.max(axis=0)
             self.report.source_max_step_rad = {
@@ -329,16 +378,21 @@ class Pose2ArmDriver:
                 return None
         self._prev_q = q[self.arm].copy()
 
-        distances = self.blob["hand_distance_m"]
-        if distances is not None:
-            distance = distances[i]
-        elif perceived_center is not None:
+        if self.gripper_source in ("gripper_position", "gripper_cmd"):
+            closure = float(self.blob[self.gripper_source][i, self.gripper_col])
+            finger = FINGER_OPEN_Q * (1.0-closure)
+        elif self.gripper_source == "hand_distance_m":
+            finger = self.hysteresis.update(self.blob["hand_distance_m"][i])
+        elif self.gripper_source == "sim-proxy" and perceived_center is not None:
             mid = 0.5 * (self.d.geom_xpos[self.finger_geoms[0]] + self.d.geom_xpos[self.finger_geoms[1]])
             distance = float(np.linalg.norm(mid - perceived_center))
+            finger = self.hysteresis.update(distance)
+        elif self.gripper_source == "sim-proxy":
+            finger = self.hysteresis.update(self.jaw_distance())
         else:
-            distance = self.jaw_distance()
-        finger = self.hysteresis.update(distance)
-        self.report.gripper["closed" if finger == FINGER_CLOSED_Q else "open"] += 1
+            finger = FINGER_OPEN_Q
+        label = "closed" if finger <= 1e-8 else "open" if finger >= FINGER_OPEN_Q-1e-8 else "partial"
+        self.report.gripper[label] = self.report.gripper.get(label, 0)+1
         return q, {self.arm: finger, self.other: FINGER_OPEN_Q}
 
     def step_frame(self, i):
@@ -368,7 +422,9 @@ def dry_run(npz_path) -> int:
     print(f"  fps          {blob['fps']}")
     print(f"  arm order    {order}  ({evidence})")
     print(f"  gripper      D<{CLOSE_BELOW_M*100:.1f}cm close / D>{OPEN_ABOVE_M*100:.1f}cm open "
-          "from the sim-side jaw-to-object distance")
+          "only for raw hand_distance_m; normalized A closure channels take priority")
+    print("  channels     " + ", ".join(k for k in ("gripper_position", "gripper_cmd", "hand_distance_m")
+                                         if blob[k] is not None))
     return 0 if order in ("left-first", "right-first") else 1
 
 

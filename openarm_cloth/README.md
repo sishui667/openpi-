@@ -1,5 +1,7 @@
 # OpenArm 双相机视觉抓取仿真（成员 B）
 
+最新 A/B 合并版：见 [合并说明与运行入口](docs/member_AB_integration_20261016.md)。A 的轨迹/夹爪输出已接入；优化后的胸部/腕部自主抓取场景保持不变。`demo_member_ab.py` 是离线人体示范物理回放，`demo_grasp_viewer.py` 仍是自主抓取，两者不混称。当前冻结清单默认在 `deliverables/member_AB_20261016/`，原 B 交付目录作为历史证据保留。
+
 MuJoCo 物理仿真：胸部 RGB-D 粗定位、腕部 RGB-D 精定位与方块朝向估计、多候选相对面抓取 IK、路径碰撞排序、接近后视觉校正和纯摩擦夹持。支持交互设置方块位置与旋转角度。
 
 这是成员 B 的当前项目快照。仓库根目录中原有的 `pose2arm-main/`、`Joint-action-n-pose-estimation-main/` 和 `openarm_cloth_with_dependencies_20260929/` 保留不变。

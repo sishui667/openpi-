@@ -1,0 +1,233 @@
+{
+  "generated": "2026-10-16T17:26:02+08:00",
+  "source": "simulation",
+  "camera": "workspace_camera",
+  "process_priority": "HIGH_PRIORITY_CLASS",
+  "resolution_wh": [
+    256,
+    192
+  ],
+  "requested_frames": 417,
+  "actual_resolution_wh": [
+    256,
+    192
+  ],
+  "frames": 417,
+  "control_hz": 20.0,
+  "budget_ms": 50.0,
+  "steps_per_tick": 100,
+  "physics_timestep_s": 0.0005,
+  "simulated_s_per_tick": 0.05,
+  "scene_workspace": {
+    "table_center_m": [
+      0.43,
+      0.0,
+      0.38
+    ],
+    "table_half_size_m": [
+      0.123,
+      0.223,
+      0.02
+    ],
+    "placement_x_m": [
+      0.35,
+      0.51
+    ],
+    "placement_y_m": [
+      -0.18,
+      0.18
+    ],
+    "cube_half_size_m": 0.0288,
+    "support_rim_m": 0.043,
+    "note": "40cm top, trimmed 24.6x44.6cm physical table, 16x36cm centre-placement region plus 43mm support rim. 19 sampled grasps passed after trimming; no complete reachability guarantee."
+  },
+  "startup_ms_excluded": 1530.0434000018868,
+  "warmup_ms_excluded": 473.2499000019743,
+  "warmup_frames": 30,
+  "stages_ms": {
+    "capture": {
+      "mean": 6.9652141486810555,
+      "p50": 5.5888,
+      "p95": 17.01934,
+      "p99": 23.374055999999946,
+      "min": 0.9828,
+      "max": 26.0974
+    },
+    "mask": {
+      "mean": 0.5586741007194245,
+      "p50": 0.5433,
+      "p95": 0.7034999999999999,
+      "p99": 0.850544,
+      "min": 0.4042,
+      "max": 1.3525
+    },
+    "fit": {
+      "mean": 10.96466426858513,
+      "p50": 7.6982,
+      "p95": 23.02632,
+      "p99": 28.02986399999998,
+      "min": 0.1631,
+      "max": 34.1797
+    },
+    "mapping": {
+      "mean": 0.08240911270983214,
+      "p50": 0.0774,
+      "p95": 0.12636,
+      "p99": 0.15453599999999992,
+      "min": 0.0597,
+      "max": 0.1902
+    },
+    "control_physics": {
+      "mean": 12.247756834532376,
+      "p50": 12.129,
+      "p95": 14.60244,
+      "p99": 15.518223999999998,
+      "min": 10.1097,
+      "max": 16.7348
+    }
+  },
+  "end_to_end_ms": {
+    "mean": 30.81871846522782,
+    "p50": 29.0797,
+    "p95": 47.75308,
+    "p99": 52.4747,
+    "min": 11.9706,
+    "max": 63.3245
+  },
+  "tick_work_ms": {
+    "mean": 30.8574139088729,
+    "p50": 29.1167,
+    "p95": 47.79326,
+    "p99": 52.505692,
+    "min": 12.001,
+    "max": 63.3674
+  },
+  "first_command_consumed_ms": {
+    "mean": 18.88702014388489,
+    "p50": 16.8345,
+    "p95": 34.70914,
+    "p99": 40.387464,
+    "min": 2.1695,
+    "max": 51.1672
+  },
+  "source_read_ms": {
+    "mean": 6.9643868105515585,
+    "p50": 5.588,
+    "p95": 17.0186,
+    "p99": 23.373155999999945,
+    "min": 0.9824,
+    "max": 26.0966
+  },
+  "host_frame_age_ms": {
+    "mean": 0.0008273381294964028,
+    "p50": 0.0007,
+    "p95": 0.0011,
+    "p99": 0.0012,
+    "min": 0.0003,
+    "max": 0.0447
+  },
+  "wall_seconds_including_pacing": 20.85070099999939,
+  "actual_stream_hz": 19.999327600545048,
+  "tick_start_interval_ms": {
+    "mean": 50.000474759615386,
+    "p50": 50.0137,
+    "p95": 50.535775,
+    "p99": 52.53251,
+    "min": 37.1512,
+    "max": 63.394
+  },
+  "processing_throughput_hz": 32.407122740524116,
+  "ticks_over_budget": 11,
+  "deadline_miss_rate": 0.026378896882494004,
+  "allowed_miss_rate": 0.01,
+  "budget_verdict": "FAIL",
+  "strict_zero_miss_pass": false,
+  "failure": null,
+  "perception_valid_frames": 331,
+  "skipped_camera_frames_latest_only": 0,
+  "raw_frames_saved": false,
+  "inactive_left_max_error_rad": 0.15896015178543232,
+  "npz": "D:\\openpi\\github_publish\\openpi-20261016-000724\\openarm_cloth\\deliverables\\member_AB_20261016\\a_hybrid_orig_20hz.npz",
+  "driver": {
+    "frames": 417,
+    "order": "left-first",
+    "order_evidence": "explicit NPZ/API joint_order contract",
+    "arm": "right",
+    "clipped_joints": 0,
+    "clipped_by_joint": {},
+    "rate_limited_frames": 14,
+    "max_clip_rad": 1.5738078313357338,
+    "max_lag_rad": 1.573807831335734,
+    "drive_seconds": 20.85070099999939,
+    "estop": null,
+    "estop_frame": null,
+    "gripper": {
+      "closed": 0,
+      "open": 6,
+      "partial": 411
+    },
+    "source_max_step_rad": {
+      "right_joint1": 0.12277925256862778,
+      "right_joint2": 0.08215368447984742,
+      "right_joint3": 0.30322301723946476,
+      "right_joint4": 0.2985672615771451,
+      "right_joint5": 0.46343050021808785,
+      "right_joint6": 0.35752906573813364,
+      "right_joint7": 0.06874194663969839
+    },
+    "ratio_to_20hz_limit": {
+      "right_joint1": 0.14655834385989588,
+      "right_joint2": 0.09806467857934636,
+      "right_joint3": 1.1136850084088028,
+      "right_joint4": 1.0965852336913544,
+      "right_joint5": 0.44254249447869354,
+      "right_joint6": 0.34141431029233543,
+      "right_joint7": 0.06564357012958212
+    },
+    "ratio_to_control_hz_limit": {
+      "right_joint1": 0.14655834385989588,
+      "right_joint2": 0.09806467857934636,
+      "right_joint3": 1.1136850084088028,
+      "right_joint4": 1.0965852336913544,
+      "right_joint5": 0.44254249447869354,
+      "right_joint6": 0.34141431029233543,
+      "right_joint7": 0.06564357012958212
+    },
+    "ratio_to_source_fps_limit": {
+      "right_joint1": 0.14655834385989588,
+      "right_joint2": 0.09806467857934636,
+      "right_joint3": 1.1136850084088028,
+      "right_joint4": 1.0965852336913544,
+      "right_joint5": 0.44254249447869354,
+      "right_joint6": 0.34141431029233543,
+      "right_joint7": 0.06564357012958212
+    },
+    "notes": [],
+    "gripper_source": "gripper_position",
+    "gripper_order": "right-first",
+    "clip_boundaries": []
+  },
+  "processed_npz_rows": 417,
+  "tracking": {
+    "stationary_current_mask_validated": 36,
+    "local_fits": 380,
+    "global_fallbacks": 115
+  },
+  "scene_manifest": "deliverables\\member_AB_20261016\\scene_manifest.json",
+  "manifest_verification_ms_excluded": 1266.86040000277,
+  "latency_scope": "simulated monocular frame request -> perception -> actuator mapping -> full physics control interval",
+  "excluded": [
+    "camera exposure-to-host latency (unavailable)",
+    "A human landmark extraction and Pose2Arm IK (offline NPZ, not measured)",
+    "monitor display latency",
+    "startup and declared warmup",
+    "buffered CSV write excluded from tick_work_ms, included in actual_stream_hz"
+  ],
+  "gripper_input": "gripper_position",
+  "host": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.14",
+    "mujoco": "3.8.1",
+    "opencv": "4.12.0"
+  }
+}

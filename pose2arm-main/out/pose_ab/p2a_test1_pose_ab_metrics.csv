@@ -1,0 +1,3 @@
+﻿backend,frames,left_arm_complete_pct,left_arm_max_missing_run,right_arm_complete_pct,right_arm_max_missing_run,left_hand_complete_pct,left_hand_max_missing_run,right_hand_complete_pct,right_hand_max_missing_run,left_wrist_jump_p95_px,left_wrist_jump_max_px,left_wrist_jump_max_frames,left_forearm_2d_cv,left_pinch_ratio_p05,left_pinch_ratio_p95,right_wrist_jump_p95_px,right_wrist_jump_max_px,right_wrist_jump_max_frames,right_forearm_2d_cv,right_pinch_ratio_p05,right_pinch_ratio_p95
+mediapipe,612,90.03,47,95.92,8,83.99,51,93.46,19,37.2,68.05,57-58,0.267,0.127,1.787,34.05,225.58,8-9,0.275,0.22,2.203
+rtmw3d,612,100.0,0,100.0,0,87.58,41,95.1,14,31.25,79.88,57-58,0.27,0.167,2.237,34.28,881.21,8-9,0.286,0.205,2.521

@@ -1,5 +1,7 @@
 # pose2arm
 
+> 2026-10-16 A/B 工程合并：当前 MuJoCo 路径是离线人体识别/IK/轨迹优化与夹爪信号，不代表以下原项目 PPO 训练路径已在本机验证。新增 `member_b_export.py` 可将原片或镜像片段按原视频时间导出为 B 的 20 Hz 输入；详见 [A/B 合并说明](../openarm_cloth/docs/member_AB_integration_20261016.md)。当前 B 场景保留其优化后的滑动夹爪，不复制本目录旧旋转夹爪的关节值。
+
 实时人体手臂动作重定向到双臂 [OpenArm v2.0](https://github.com/OpenRobotLab/openarm) 机器人，由在 [Isaac Lab](https://isaac-sim.github.io/IsaacLab/) 中训练的 PPO 策略驱动。
 
 网络摄像头（或预录视频）接入 MediaPipe 进行骨架提取，得到的臂部几何信息作为 18 维观测输入学习策略，在 Isaac Sim 中同时输出双臂的关节目标。

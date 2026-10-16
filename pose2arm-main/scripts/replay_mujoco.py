@@ -15,6 +15,7 @@ openarm_bimanual.xml 双臂模型，让机械臂在仿真里跟随人体动作�
     python scripts\replay_mujoco.py --npz data\xxx.npz --mirror
     python scripts\replay_mujoco.py --dynamic --stride 2 --speed 0.5
     python scripts\replay_mujoco.py --xml 路径\场景.xml --plain
+    python scripts\replay_mujoco.py --gripper auto --gripper-side right   # 夹爪随视频开合
 
 键位: 视频窗口按 q 退出; 关闭任一窗口即结束; 循环播放直到手动关闭。
 """
@@ -30,16 +31,33 @@ import mujoco.viewer
 import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_XML = Path(
-    r"d:\openpi\openarm_cloth_with_dependencies_20260929\openarm_cloth"
-    r"\official_openarm_mujoco\v2\openarm_bimanual.xml"
-)
+DEFAULT_XML = (REPO_ROOT.parent /
+               "openarm_cloth_with_dependencies_20260929/openarm_cloth/"
+               "official_openarm_mujoco/v2/openarm_bimanual.xml")
 DEFAULT_VIDEO = REPO_ROOT / "videos" / "waving_demo.mp4"
 
 JOINT_NAMES = [f"openarm_{side}_joint{i}" for side in ("left", "right")
                for i in range(1, 8)]
 
+# 夹爪关节映射（实测验证: qpos=0 指尖间距 9.1mm=全闭合, 极值=152.5mm 全张开）
+GRIPPER_OPEN_QPOS  = {"left": 0.7854, "right": -0.7854}   # 全张开
+GRIPPER_CLOSE_QPOS = {"left": 0.0,    "right": 0.0}       # 全闭合
+GRIPPER_COL = {"right": 0, "left": 1}  # gripper_cmd 列序 [右臂, 左臂]
+
 CV_WIN = "pose2arm replay - source video (q to quit)"
+
+
+def physics_steps_for_frame(index, period, timestep):
+    """Carry fractional steps across frames instead of advancing just once."""
+    if index < 0 or not np.isfinite(period) or not np.isfinite(timestep) or period <= 0 or timestep <= 0:
+        raise ValueError("invalid physics clock")
+    return int(np.floor((index+1)*period/timestep+1e-9)-np.floor(index*period/timestep+1e-9))
+
+
+def validate_position_actuators(model, ids):
+    for aid in ids:
+        if model.actuator_gainprm[aid,0] <= 0 or model.actuator_biasprm[aid,1] >= 0:
+            raise ValueError("A dynamic replay requires POSITION servos; use B driver for torque-controlled models")
 
 # ── 场景美化: 仅注入 skybox 背景色 + 灯光（无地面） ───────────────────────────
 # 配色方案: key = --bg 参数值。机械臂材质亮度: matte_black≈0.25, silver≈0.65-0.75
@@ -87,8 +105,8 @@ def make_scenic_xml(xml_path: Path, theme: str = "blue") -> Path:
 
 # ── 数据加载 ──────────────────────────────────────────────────────────────────
 
-def load_frames(npz_path: Path, clip: str) -> tuple[np.ndarray, np.ndarray, float]:
-    """读取 npz，返回待回放的 (F,14) 帧序列、对应原视频帧号数组与源 fps。"""
+def load_frames(npz_path: Path, clip: str) -> tuple[np.ndarray, np.ndarray, float, np.ndarray | None]:
+    """读取 npz，返回待回放的 (F,14) 帧序列、对应原视频帧号、源 fps、夹爪通道 (F,2) 或 None。"""
     d = np.load(npz_path)
     joint_angles = np.asarray(d["joint_angles"], dtype=float)
     if joint_angles.ndim != 2 or joint_angles.shape[1] != 14:
@@ -101,7 +119,15 @@ def load_frames(npz_path: Path, clip: str) -> tuple[np.ndarray, np.ndarray, floa
         frames, seg_fids = joint_angles[n:], fids[n:]
     else:  # all
         frames, seg_fids = joint_angles, fids
-    return frames, seg_fids, float(d["fps"])
+    grip = None
+    grip_key = "gripper_position" if "gripper_position" in d.files else "gripper_cmd"
+    if grip_key in d.files:
+        g = np.asarray(d[grip_key], dtype=float)
+        if g.ndim == 2 and g.shape[0] == len(joint_angles):
+            grip = g[:n] if clip == "orig" else (g[n:] if clip == "mirror" else g)
+        else:
+            print(f"[WARN] {grip_key} 形状 {g.shape} 与 joint_angles 不匹配，忽略")
+    return frames, seg_fids, float(d["fps"]), grip
 
 
 def joint_qpos_ids(model, names: list[str]) -> np.ndarray:
@@ -113,6 +139,25 @@ def joint_qpos_ids(model, names: list[str]) -> np.ndarray:
             raise ValueError(f"模型中找不到关节 {name!r}")
         ids.append(int(model.jnt_qposadr[jid]))
     return np.array(ids)
+
+
+def finger_qpos_ids(model, side: str) -> np.ndarray:
+    """该侧夹爪两个 finger 关节的 qpos 地址（mimic 联动，运动学模式两关节同值直写）。"""
+    ids = []
+    for j in (1, 2):
+        jid = int(mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT,
+                                    f"openarm_{side}_finger_joint{j}"))
+        if jid < 0:
+            raise ValueError(f"模型中找不到夹爪关节 openarm_{side}_finger_joint{j}")
+        ids.append(int(model.jnt_qposadr[jid]))
+    return np.array(ids)
+
+
+def finger_actuator_id(model, side: str) -> int | None:
+    """该侧夹爪位置执行器 id（{side}_finger1_ctrl），缺失返回 None。"""
+    aid = int(mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR,
+                                f"{side}_finger1_ctrl"))
+    return aid if aid >= 0 else None
 
 
 def clip_to_limits(frames: np.ndarray, model, qpos_ids: np.ndarray) -> np.ndarray:
@@ -154,6 +199,13 @@ def main() -> None:
                         help="禁用背景美化，直接用原 XML")
     parser.add_argument("--loop", action="store_true", default=True,
                         help="循环播放直到关闭窗口（默认开）")
+    parser.add_argument("--gripper", choices=["auto", "open", "close"], default="auto",
+                        help="夹爪: auto=跟随 npz gripper_cmd(无通道则常开); "
+                             "open/close=强制常开/常闭（调试用）")
+    parser.add_argument("--gripper-side", choices=["right", "left", "both"], default="right",
+                        help="驱动哪侧夹爪（默认 right，单臂右手任务）")
+    parser.add_argument("--gripper-ramp", type=float, default=None,
+                        help="夹爪全行程斜坡时间（秒）；连续安全通道默认不二次限速，旧二值通道默认 0.15")
     args = parser.parse_args()
 
     if not args.npz.is_file():
@@ -161,9 +213,15 @@ def main() -> None:
     if not args.xml.is_file():
         raise SystemExit(f"XML 不存在: {args.xml}")
 
-    frames, fids, src_fps = load_frames(args.npz, args.clip)
+    frames, fids, src_fps, grip = load_frames(args.npz, args.clip)
+    continuous_grip = "gripper_position" in np.load(args.npz).files
+    gripper_ramp = args.gripper_ramp
+    if gripper_ramp is None:
+        gripper_ramp = 0.0 if continuous_grip else 0.15
     frames = frames[::max(1, args.stride)]
     fids = fids[::max(1, args.stride)]
+    if grip is not None:
+        grip = grip[::max(1, args.stride)]
     dt = args.stride / (src_fps * args.speed)  # 每帧目标停留时长
 
     # 场景美化
@@ -190,9 +248,61 @@ def main() -> None:
         if (ctrl_ids < 0).any():
             missing = [JOINT_NAMES[k] for k, c in enumerate(ctrl_ids) if c < 0]
             raise SystemExit(f"以下关节无对应执行器，--dynamic 不可用: {missing}")
+        validate_position_actuators(model, ctrl_ids)
+
+    # ── 夹爪配置 ────────────────────────────────────────────────────────────────
+    driven = ["right", "left"] if args.gripper_side == "both" else [args.gripper_side]
+    grip_qpos = {s: finger_qpos_ids(model, s) for s in driven}
+    grip_ctrl = {s: finger_actuator_id(model, s) for s in driven}
+    if args.dynamic and any(grip_ctrl[s] is None for s in driven):
+        missing = [s for s in driven if grip_ctrl[s] is None]
+        raise SystemExit(f"以下侧夹爪无位置执行器，--dynamic 下无法驱动: {missing}")
+    if args.dynamic:
+        validate_position_actuators(model, [grip_ctrl[s] for s in driven])
+
+    # 未驱动侧夹爪初始化为全张开（qpos/ctrl 默认 0 = 全闭合，避免静止臂显示为捏死）
+    for s in ("right", "left"):
+        if s not in driven:
+            data.qpos[finger_qpos_ids(model, s)] = GRIPPER_OPEN_QPOS[s]
+            if args.dynamic:
+                aid = finger_actuator_id(model, s)
+                if aid is not None:
+                    data.ctrl[aid] = GRIPPER_OPEN_QPOS[s]
+
+    if args.gripper == "open":
+        grip_desc = "强制常开"
+    elif args.gripper == "close":
+        grip_desc = "强制常闭"
+    elif grip is not None:
+        grip_desc = "跟随连续 gripper_position（旧数据兼容 gripper_cmd）"
+    else:
+        grip_desc = "npz 无 gripper_cmd 通道 → 常开"
+    print(f"[GRIPPER] side={args.gripper_side}  mode={args.gripper}({grip_desc})  "
+          f"ramp={gripper_ramp}s")
+
+    def gripper_target(side: str, i: int) -> float:
+        """该回放帧的夹爪 qpos/ctrl 目标。"""
+        if args.gripper == "open":
+            return GRIPPER_OPEN_QPOS[side]
+        if args.gripper == "close":
+            return GRIPPER_CLOSE_QPOS[side]
+        if grip is not None:
+            closure = float(np.clip(grip[i % len(grip), GRIPPER_COL[side]], 0.0, 1.0))
+            return (GRIPPER_OPEN_QPOS[side]
+                    + closure * (GRIPPER_CLOSE_QPOS[side] - GRIPPER_OPEN_QPOS[side]))
+        return GRIPPER_OPEN_QPOS[side]
+
+    # 斜坡限速: 全行程 / ramp 秒 → 每回放帧最大步长
+    grip_step = {s: abs(GRIPPER_OPEN_QPOS[s] - GRIPPER_CLOSE_QPOS[s])
+                 / max(1.0, gripper_ramp * src_fps / max(1, args.stride))
+                 for s in driven}
+    grip_pos = {s: GRIPPER_OPEN_QPOS[s] for s in driven}  # 初始张开
+    grip_switches = {s: 0 for s in driven}
+    grip_prev = {s: None for s in driven}
 
     # 视频对比窗口
     cap = None
+    cap_next_fid = 0
     if args.video and Path(args.video).is_file():
         cap = cv2.VideoCapture(str(args.video))
         if not cap.isOpened():
@@ -211,6 +321,7 @@ def main() -> None:
     print(f"[MODE] {'dynamic (position ctrl + mj_step)' if args.dynamic else 'kinematic (qpos + mj_forward)'}")
 
     mirror = args.clip in ("mirror", "all")
+    physical_frame = 0
 
     with mujoco.viewer.launch_passive(model, data) as viewer:
         viewer.cam.lookat[:] = [0.0, 0.0, 0.30]
@@ -229,17 +340,42 @@ def main() -> None:
 
                 if args.dynamic:
                     data.ctrl[ctrl_ids] = frame
-                    mujoco.mj_step(model, data)
                 else:
                     data.qpos[qpos_ids] = frame
+
+                # 夹爪驱动（斜坡限速趋近目标）
+                for s in driven:
+                    tgt = gripper_target(s, i)
+                    grip_pos[s] += float(np.clip(tgt - grip_pos[s],
+                                                 -grip_step[s], grip_step[s]))
+                    if args.dynamic:
+                        data.ctrl[grip_ctrl[s]] = grip_pos[s]
+                    else:
+                        data.qpos[grip_qpos[s]] = grip_pos[s]  # joint1/2 同值(mimic)
+                    if grip_prev[s] is not None and tgt != grip_prev[s]:
+                        grip_switches[s] += 1
+                    grip_prev[s] = tgt
+
+                # Write arm AND gripper commands before the physics interval.
+                if args.dynamic:
+                    for _ in range(physics_steps_for_frame(physical_frame, dt, model.opt.timestep)):
+                        mujoco.mj_step(model, data)
+                    physical_frame += 1
+                else:
                     mujoco.mj_forward(model, data)
+
                 viewer.sync()
 
                 # 同步视频帧（按 npz 记录的原视频帧号对齐）
                 if cap is not None:
                     fid = int(fids[i % len(fids)])
-                    cap.set(cv2.CAP_PROP_POS_FRAMES, fid)
+                    # Normal playback is sequential. Avoid a costly random seek on
+                    # every frame; seek only for a loop restart, mirror/all boundary,
+                    # or deliberately sparse/non-consecutive frame indices.
+                    if fid != cap_next_fid:
+                        cap.set(cv2.CAP_PROP_POS_FRAMES, fid)
                     ok, img = cap.read()
+                    cap_next_fid = fid + 1
                     if ok:
                         if mirror and args.clip == "mirror":
                             img = cv2.flip(img, 1)  # 镜像动作 ↔ 水平翻转视频
@@ -262,6 +398,8 @@ def main() -> None:
         cap.release()
         cv2.destroyAllWindows()
     print("[DONE] 回放结束")
+    sw = ", ".join(f"{s}: {grip_switches[s]} 次" for s in driven)
+    print(f"[GRIPPER] 连续目标更新统计: {sw}")
 
 
 if __name__ == "__main__":

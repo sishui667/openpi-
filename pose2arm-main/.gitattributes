@@ -1,0 +1,2 @@
+# A/B freeze manifests require exact bytes on every checkout.
+* -text

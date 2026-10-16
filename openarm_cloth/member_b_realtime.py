@@ -97,7 +97,7 @@ class USBLatestFrame:
         self.thread.join(timeout=1)
 
 
-def simulation_setup(npz, hz):
+def simulation_setup(npz, hz, gripper_mode="auto"):
     import workspace_camera as wc
     from member_b_scene import build_scene
     from pose2arm_driver import Pose2ArmDriver
@@ -108,7 +108,7 @@ def simulation_setup(npz, hz):
     for _ in range(round(1.2 / model.opt.timestep)):
         apply_controller(model, data, specs, actuators, holds, {"left": 0.044, "right": 0.044})
         mujoco.mj_step(model, data)
-    driver = Pose2ArmDriver(model, data, npz, arm="right", control_hz=hz) if npz else None
+    driver = Pose2ArmDriver(model, data, npz, arm="right", control_hz=hz, gripper_mode=gripper_mode) if npz else None
     return wc, model, data, specs, actuators, holds, driver
 
 
@@ -133,7 +133,7 @@ def run(args):
     grip = GripperHysteresis()
     failure = None
     if args.source == "simulation":
-        wc, model, data, specs, actuators, holds, driver = simulation_setup(args.npz, args.hz)
+        wc, model, data, specs, actuators, holds, driver = simulation_setup(args.npz, args.hz, args.gripper_mode)
         for key in wc.TRACKING_STATS:
             wc.TRACKING_STATS[key] = 0
         from member_b_actuators import ActuatorController
@@ -209,7 +209,8 @@ def run(args):
                         targets = holds
                         distance = None if pose is None else float(np.linalg.norm(
                             0.5 * (data.geom_xpos[g[0]] + data.geom_xpos[g[1]]) - pose))
-                        fingers = {"right": grip.update(distance), "left": 0.044}
+                        fingers = {"right": grip.update(distance) if args.gripper_mode == "sim-proxy" else .044,
+                                   "left": .044}
                     action = controller.set_targets(targets, fingers)
                     mapped = time.perf_counter_ns()
                     for j in range(steps):
@@ -322,8 +323,7 @@ def run(args):
                      "A human landmark extraction and Pose2Arm IK (offline NPZ, not measured)",
                      "monitor display latency", "startup and declared warmup",
                      "buffered CSV write excluded from tick_work_ms, included in actual_stream_hz"],
-        "gripper_input": ("NPZ hand_distance_m" if driver and driver.blob["hand_distance_m"] is not None
-                          else "sim jaw-to-visually-estimated-cube proxy, NOT human fingertip distance" if model else None),
+        "gripper_input": driver.gripper_source if driver else (args.gripper_mode if model else None),
         "host": {"platform": platform.platform(), "python": platform.python_version(),
                  "mujoco": mujoco.__version__, "opencv": cv2.__version__},
     }
@@ -341,6 +341,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", choices=("simulation", "usb"), default="simulation")
     parser.add_argument("--npz", type=Path)
+    parser.add_argument("--gripper-mode", choices=("auto", "human-only", "sim-proxy"), default="auto")
     parser.add_argument("--frames", type=int, default=500)
     parser.add_argument("--hz", type=float, default=20)
     parser.add_argument("--warmup", type=int, default=30)

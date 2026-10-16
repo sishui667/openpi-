@@ -1,0 +1,708 @@
+{
+  "schema_version": 2,
+  "role": "Merged Member A/B offline demonstration interface",
+  "source_scene": "simulation/v1/droid_cube_scene_perception.xml",
+  "mujoco_version": "3.8.1",
+  "active_arm": "right",
+  "inactive_arm": "left",
+  "inactive_policy": "fixed initial high standby",
+  "workspace": {
+    "table_center_m": [
+      0.43,
+      0.0,
+      0.38
+    ],
+    "table_half_size_m": [
+      0.123,
+      0.223,
+      0.02
+    ],
+    "placement_x_m": [
+      0.35,
+      0.51
+    ],
+    "placement_y_m": [
+      -0.18,
+      0.18
+    ],
+    "cube_half_size_m": 0.0288,
+    "support_rim_m": 0.043,
+    "note": "40cm top, trimmed 24.6x44.6cm physical table, 16x36cm centre-placement region plus 43mm support rim. 19 sampled grasps passed after trimming; no complete reachability guarantee."
+  },
+  "physics": {
+    "timestep_s": 0.0005,
+    "integrator": 3,
+    "solver": 1,
+    "iterations": 400,
+    "noslip_iterations": 10,
+    "gravity_m_s2": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "cube_mass_kg": 0.18,
+    "cube_half_size_m": [
+      0.0288,
+      0.0288,
+      0.0288
+    ],
+    "cube_inertia_kg_m2": [
+      0.00012,
+      0.00012,
+      0.00012
+    ],
+    "cube_friction": [
+      1.0,
+      0.02,
+      0.01
+    ],
+    "cube_solref": [
+      0.004,
+      1.0
+    ],
+    "cube_solimp": [
+      0.95,
+      0.99,
+      0.001,
+      0.5,
+      2.0
+    ],
+    "table_center_m": [
+      0.43,
+      0.0,
+      0.38
+    ],
+    "table_half_size_m": [
+      0.123,
+      0.223,
+      0.02
+    ],
+    "table_friction": [
+      0.8,
+      0.005,
+      0.0001
+    ],
+    "explicit_contact_pairs": [
+      {
+        "geom1": "openarm_left_right_finger_collision",
+        "geom2": "droid_object_geom",
+        "condim": 4,
+        "friction": [
+          1.0,
+          1.0,
+          0.03,
+          0.0001,
+          0.0001
+        ],
+        "solref": [
+          0.005,
+          1.0
+        ]
+      },
+      {
+        "geom1": "openarm_left_left_finger_collision",
+        "geom2": "droid_object_geom",
+        "condim": 4,
+        "friction": [
+          1.0,
+          1.0,
+          0.03,
+          0.0001,
+          0.0001
+        ],
+        "solref": [
+          0.005,
+          1.0
+        ]
+      },
+      {
+        "geom1": "openarm_right_right_finger_collision",
+        "geom2": "droid_object_geom",
+        "condim": 4,
+        "friction": [
+          1.0,
+          1.0,
+          0.03,
+          0.0001,
+          0.0001
+        ],
+        "solref": [
+          0.005,
+          1.0
+        ]
+      },
+      {
+        "geom1": "openarm_right_left_finger_collision",
+        "geom2": "droid_object_geom",
+        "condim": 4,
+        "friction": [
+          1.0,
+          1.0,
+          0.03,
+          0.0001,
+          0.0001
+        ],
+        "solref": [
+          0.005,
+          1.0
+        ]
+      }
+    ],
+    "active_welds": []
+  },
+  "cameras": [
+    {
+      "name": "front_camera",
+      "position_local_m": [
+        0.0,
+        2.0,
+        0.5
+      ],
+      "quaternion_wxyz": [
+        4.329780281177467e-17,
+        4.329780281177466e-17,
+        0.7071067811865475,
+        0.7071067811865476
+      ],
+      "fovy_deg": 90.0,
+      "intrinsics_640x480": [
+        [
+          240.00000000000003,
+          0,
+          320
+        ],
+        [
+          0,
+          240.00000000000003,
+          240
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "side_camera",
+      "position_local_m": [
+        -2.0,
+        0.0,
+        0.5
+      ],
+      "quaternion_wxyz": [
+        -0.5,
+        -0.4999999999999999,
+        0.5,
+        0.5000000000000001
+      ],
+      "fovy_deg": 90.0,
+      "intrinsics_640x480": [
+        [
+          240.00000000000003,
+          0,
+          320
+        ],
+        [
+          0,
+          240.00000000000003,
+          240
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "workspace_camera",
+      "position_local_m": [
+        0.45,
+        -0.0,
+        1.2348
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fovy_deg": 55.0,
+      "intrinsics_640x480": [
+        [
+          461.03571047307986,
+          0,
+          320
+        ],
+        [
+          0,
+          461.03571047307986,
+          240
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "v22_left_d405_rgb",
+      "position_local_m": [
+        0.0673312778136,
+        0.005,
+        0.0120506709329
+      ],
+      "quaternion_wxyz": [
+        0.2226124016368568,
+        0.6711510401075682,
+        0.6711510401075682,
+        0.2226124016368568
+      ],
+      "fovy_deg": 58.0,
+      "intrinsics_640x480": [
+        [
+          432.97146126514167,
+          0,
+          320
+        ],
+        [
+          0,
+          432.97146126514167,
+          240
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "v22_right_d405_rgb",
+      "position_local_m": [
+        0.0673312778136,
+        0.005,
+        0.0120506709329
+      ],
+      "quaternion_wxyz": [
+        0.2226124016368568,
+        0.6711510401075682,
+        0.6711510401075682,
+        0.2226124016368568
+      ],
+      "fovy_deg": 58.0,
+      "intrinsics_640x480": [
+        [
+          432.97146126514167,
+          0,
+          320
+        ],
+        [
+          0,
+          432.97146126514167,
+          240
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "chest_d435i_preview",
+      "position_local_m": [
+        -0.019091883092,
+        0.0280922402258,
+        0.03
+      ],
+      "quaternion_wxyz": [
+        0.3092844931993629,
+        0.6358797860180909,
+        -0.3092844931993629,
+        0.6358797860180909
+      ],
+      "fovy_deg": 58.0,
+      "intrinsics_640x480": [
+        [
+          432.97146126514167,
+          0,
+          320
+        ],
+        [
+          0,
+          432.97146126514167,
+          240
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    }
+  ],
+  "monocular_control_camera": "workspace_camera",
+  "monocular_camera_note": "simulated RGB only; fixed OVERHEAD (90deg), not human-facing USB camera",
+  "human_capture_camera": "OpenCV USB device 0, DSHOW; separate from simulated scene cameras",
+  "task_definition": {
+    "target_zone": {
+      "center_xy_m": [
+        0.43,
+        -0.1
+      ],
+      "radius_m": 0.03
+    },
+    "maximum_duration_s": 15.0,
+    "grasp_height_above_table_m": 0.03,
+    "jaw_object_distance_m": 0.02,
+    "grasp_hold_s": 0.5,
+    "release_settle_s": 0.5,
+    "release_linear_speed_m_s": 0.02,
+    "release_angular_speed_rad_s": 0.2,
+    "scope": "environment/evaluation contract; supplied NPZ is not a validated pick-and-place demonstration"
+  },
+  "actuators": {
+    "left": {
+      "joints": [
+        "left_joint1_ctrl",
+        "left_joint2_ctrl",
+        "left_joint3_ctrl",
+        "left_joint4_ctrl",
+        "left_joint5_ctrl",
+        "left_joint6_ctrl",
+        "left_joint7_ctrl"
+      ],
+      "q_range_rad": [
+        [
+          -3.490659,
+          1.3962629999999998
+        ],
+        [
+          -3.3161253267948965,
+          0.17453267320510335
+        ],
+        [
+          -1.570796,
+          1.570796
+        ],
+        [
+          0.0,
+          2.443461
+        ],
+        [
+          -1.570796,
+          1.570796
+        ],
+        [
+          -0.785398,
+          0.785398
+        ],
+        [
+          -1.570796,
+          1.570796
+        ]
+      ],
+      "torque_limits_nm": [
+        [
+          -40.0,
+          40.0
+        ],
+        [
+          -40.0,
+          40.0
+        ],
+        [
+          -27.0,
+          27.0
+        ],
+        [
+          -27.0,
+          27.0
+        ],
+        [
+          -7.0,
+          7.0
+        ],
+        [
+          -7.0,
+          7.0
+        ],
+        [
+          -7.0,
+          7.0
+        ]
+      ],
+      "finger_gainprm": [
+        [
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "finger_biasprm": [
+        [
+          0.0,
+          -100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "right": {
+      "joints": [
+        "right_joint1_ctrl",
+        "right_joint2_ctrl",
+        "right_joint3_ctrl",
+        "right_joint4_ctrl",
+        "right_joint5_ctrl",
+        "right_joint6_ctrl",
+        "right_joint7_ctrl"
+      ],
+      "q_range_rad": [
+        [
+          -1.396263,
+          3.490659
+        ],
+        [
+          -0.17453267320510335,
+          3.3161253267948965
+        ],
+        [
+          -1.570796,
+          1.570796
+        ],
+        [
+          0.0,
+          2.443461
+        ],
+        [
+          -1.570796,
+          1.570796
+        ],
+        [
+          -0.785398,
+          0.785398
+        ],
+        [
+          -1.570796,
+          1.570796
+        ]
+      ],
+      "torque_limits_nm": [
+        [
+          -40.0,
+          40.0
+        ],
+        [
+          -40.0,
+          40.0
+        ],
+        [
+          -27.0,
+          27.0
+        ],
+        [
+          -27.0,
+          27.0
+        ],
+        [
+          -7.0,
+          7.0
+        ],
+        [
+          -7.0,
+          7.0
+        ],
+        [
+          -7.0,
+          7.0
+        ]
+      ],
+      "finger_gainprm": [
+        [
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "finger_biasprm": [
+        [
+          0.0,
+          -100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -100.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  },
+  "controller": {
+    "kp": [
+      80,
+      80,
+      55,
+      55,
+      25,
+      20,
+      20
+    ],
+    "kd": [
+      8,
+      8,
+      5,
+      5,
+      3,
+      2,
+      2
+    ],
+    "feedforward": "qfrc_bias",
+    "frequency_hz": 20.0,
+    "physics_steps_per_tick": 100
+  },
+  "files_sha256": {
+    "simulation/v1/droid_cube_scene.xml": "d452c13db96342803fedcb96a7aef11e6f3e44c23124cc586d8344cb580f4357",
+    "simulation/v1/droid_cube_scene_perception.xml": "0a91274b147e130e4f2ba36dafb022664841d8ad027054ae29cd45f360ba3e61",
+    "simulation/v1/task_workspace.json": "135dd310ef47ab24ec6f0d048afecc8a1fcba28c0a9a608cf4df87a7ce9c8a21",
+    "task_workspace.py": "0e3597287ddf9015dc53ea26a7f7f27f2ac893f1d5ab8e13717b09cdf4a7dbd1",
+    "member_b_scene.py": "02767594089a6e0852b2187a53d8c66a9821b9936b64778985d2fe765c4b047a",
+    "pose2arm_driver.py": "ac2b176d95d47717fd5db1fbe17e2ac48d0a1e0b39d9b6950ce1478ef633edcc",
+    "workspace_camera.py": "ebe288af792a0226cae8de79a05aec1ac250f74590efedc44547527812e37c35",
+    "member_b_realtime.py": "3166792efdcf0450cfd4820fbaf583e77c7bfef409c104197b822aff111f7dfd",
+    "member_b_actuators.py": "a5a52396d3b802cfff8af0e33a1a430dfe35be6d2b6887216f8c94c395375cf1",
+    "freeze_member_b_scene.py": "52ef58a2011ce46515ff3be811a3741d44a648861aabcb7ed4e29c9b566c1fc7",
+    "demo_member_ab.py": "309ddc33d38d22c1ab9721baa9c27669723e9593ef84e116a349499c85dc1647",
+    "realtime_capture.py": "0c5e8ee288796d36b8be18bad02cd90a8e9c238f76943ba3b5bc4858ebb5fd1f",
+    "teleop_towel_dataset.py": "47a649f88d0dfb5a298e1c41e62c52311ff7064b627e06ece85b9edc5e865955",
+    "../pose2arm-main/member_b_export.py": "ac63612d8eb48edc73b6c0cd99cd646565755419f1f4a2e72facda6ddf0a3485",
+    "../pose2arm-main/gripper_map.py": "102766d94c43cd118b28cc33aa1a2bc7abea428d224e82861d6afb826b813a3a",
+    "../pose2arm-main/smoothing.py": "b3e8e7f8280bcfd532123426c0ff96b44461c7787311b8285d6cafea5c1a75c0",
+    "../pose2arm-main/scripts/generate_ik_dataset.py": "6dc000d1fc12675112d3e7068b5714ba7b2fd76d874fd0a6442323cf7a1ae30c",
+    "../pose2arm-main/collision_safety.py": "fcedf9fe4a1bd5d8dfa9915a7678fd613aa09702b8625922f681c3aeeffac7e3",
+    "../pose2arm-main/hand_association.py": "06eb21c4135fd601094748d373088fb7f62a7c6d8d1fc2b4e4c418ef832b91ae",
+    "../pose2arm-main/extract_hand.py": "dea87f5951009aee60682e65a53f48ce6ca1ef3785af53bff56b1f84a4634e2e",
+    "simulation/v1/meshes/collision/body/body_link0.stl": "6c18bbf7e86b03e3faf802e61e8eb438b38dcbcf146d97cffe6e808c65e9a72a",
+    "simulation/v1/meshes/collision/arm/link0.stl": "baf52578e1d9e6225f3818cae82b6074a0b948d3cef8e9a3e6dfafca78507590",
+    "simulation/v1/meshes/collision/arm/link1.stl": "066113d13d5cc85098609003bc7ebb73c570015350877f5ed7162ef1b6601852",
+    "simulation/v1/meshes/collision/arm/link2.stl": "382ab32e4ae0880e8a1512e7a6ca6ce1f478a6c125db4efa977429ffb1d6b02a",
+    "simulation/v1/meshes/collision/arm/link3.stl": "00c908cefab152c00416a570a48bf9aafed1549085f19ff2d882dc3f355d9f59",
+    "simulation/v1/meshes/collision/arm/link4.stl": "b54883b8c7c96268a68a5879f95998a53ad0b0c4fe74325fad63a6caef669c73",
+    "simulation/v1/meshes/collision/arm/link5.stl": "678a2802906eff7b45a836d2f34a2d8e51def50b6599376968f888e05c72739e",
+    "simulation/v1/meshes/collision/arm/link6.stl": "95529bec23733476dfdbbb266c7db0d25a473a568de73c8337a82440fe4a9ac3",
+    "simulation/v1/meshes/collision/arm/link7.stl": "434f207f21f75f5f0bd604e390b8e5bc7b62b619265222846770e06b3f9b5cfb",
+    "simulation/v1/meshes/collision/gripper/hand.stl": "8e5d373ebbd3fd001b506058644062ad71a68f1ced5ca5d5ed0f6de20137956b",
+    "simulation/v1/meshes/collision/gripper/finger.stl": "8e96e1314618cf434908f70df78f68dd2b049c03538964e8d41fc99abe41564d",
+    "simulation/v1/meshes/visual/body/body_link0_0.obj": "e602289d3fa4002bea0b40241ac06bf867b290975b292ca2b21e1273cd1f5bb4",
+    "simulation/v1/meshes/visual/body/body_link0_1.obj": "6feb19b84f5d58f64521d22529b9987384f931df4fd3dc52c5120b785daf67ef",
+    "simulation/v1/meshes/visual/body/body_link0_2.obj": "a781f72d229ec9015178503669ed34e33a0ec3dd04f429abef1e304ffc2fb372",
+    "simulation/v1/meshes/visual/body/body_link0_3.obj": "66b509bcd3ed99c25e369dba8d5892c508ec2bb9bbaa12bd1910bb3b47710737",
+    "simulation/v1/meshes/visual/body/body_link0_4.obj": "c70bc6e00abaf91b52ed876a1517e5a95055d5659e12f02df0ac2907c6ca03cf",
+    "simulation/v1/meshes/visual/body/body_link0_5.obj": "db6635bcfb980978e6c93b5009b745047580ff129a78645123b3696ffab8bf8e",
+    "simulation/v1/meshes/visual/arm/link0_0.obj": "7f03f53c6b9a623bd5084c453ffd567eee749feb4c4198e26dc1a50b5dd0d44f",
+    "simulation/v1/meshes/visual/arm/link0_1.obj": "b650ac28fb336bbcbd839b6a13455d15daf2981ee0106c59c13216c82ae1f966",
+    "simulation/v1/meshes/visual/arm/link1_0.obj": "cf6488cbaabd7cb25ce19079c7594100ad1014b6e1a1f785f484322c6a2f1d90",
+    "simulation/v1/meshes/visual/arm/link1_1.obj": "f52becad4ff42dcab18252aeac7a64983536bd74bf87e4ee569ea20dd94c683c",
+    "simulation/v1/meshes/visual/arm/link1_2.obj": "71a62d309f692747a330032d66666f28348e755562a3df1121567e7209501b8a",
+    "simulation/v1/meshes/visual/arm/link1_3.obj": "f393b39068913a3ba01a546d1b5c8fa85770ae6a38e56c6edf72741545a992ee",
+    "simulation/v1/meshes/visual/arm/link2_0.obj": "37ffd233a269a3da8e43cece9baf5a1aac3fe2ec311f55d512c9b8b5eddb49e2",
+    "simulation/v1/meshes/visual/arm/link2_1.obj": "92a5ccae28fa82ff0e4256aeb9ed511db94648550f15bad1e64ea0315a076396",
+    "simulation/v1/meshes/visual/arm/link2_2.obj": "37faf3fc75596c1f7977beb11e5e383138259c411d721d67efb87a326293f834",
+    "simulation/v1/meshes/visual/arm/link3_0.obj": "21efe7a1bfe9e7b5ce937b4f4de18f513b3bf15be0c22cdd06f1837eb26faf02",
+    "simulation/v1/meshes/visual/arm/link3_1.obj": "7d9e5a057baa8155f8d44852861d5801699ca00e9edbb789deb23b932bf378c5",
+    "simulation/v1/meshes/visual/arm/link3_2.obj": "1d874579ebdb34187773bd3addfe17d854f8a56ef5b40eff078793447579c8fc",
+    "simulation/v1/meshes/visual/arm/link4_0.obj": "d52721ef2490f8f9065351a8f44993e0377448c0bcd3f082e1940c3fb53489ce",
+    "simulation/v1/meshes/visual/arm/link4_1.obj": "548430495869ea649be7036171d1dd535f8eab10f618459c4054bb8e00ba04a2",
+    "simulation/v1/meshes/visual/arm/link4_2.obj": "8baedfd63a99d1e31d3e0078e341779672da0c6b3cbe2abde756c8c4fc72be43",
+    "simulation/v1/meshes/visual/arm/link5_0.obj": "f63f62fb9558a2a33c0b4f754e98c7f6114116651b938503eeac0f7d181240a5",
+    "simulation/v1/meshes/visual/arm/link5_1.obj": "79480de4fa5054fd145fdc2e7d6681ddacc78502811c6e47d58ca60f742a2c5c",
+    "simulation/v1/meshes/visual/arm/link5_2.obj": "9f2933b06dd97a6093e37b6556e8be5d0dc78161d71db70d615b12a22d3069fc",
+    "simulation/v1/meshes/visual/arm/link6_0.obj": "d40552f8c5f70fa79e21141a40c832e714f3093b2c548a004d4cc072d2db1a43",
+    "simulation/v1/meshes/visual/arm/link6_1.obj": "5df4f13db13c43525296f016bbb5705f1f7197352be6452a6fd9093d8b484836",
+    "simulation/v1/meshes/visual/arm/link7_0.obj": "6d39c1705d4fb6df3e0caa594f2a6a3c2dbf3df988ad4c2be5d041732fce092e",
+    "simulation/v1/meshes/visual/arm/link7_1.obj": "0e1313ce45cfe06911d2a2551889639d1939a287e1b527514ede2b934ddf5d5c",
+    "simulation/v1/meshes/visual/gripper/hand_0.obj": "21f8b0010e78f064a669ecaf869ed61fe5c198fd8dc755a81d88cd6b3ff9efc0",
+    "simulation/v1/meshes/visual/gripper/hand_1.obj": "0e6f920f45d144f5711f7903b9c1304ef59478d74ac21b3aa68ba356ef2c274b",
+    "simulation/v1/meshes/visual/gripper/finger_0.obj": "be79d987c868a9427ab6f80bec5e73f1aaf16c02604b0dd088cf8076ef1ad2a0",
+    "simulation/v1/meshes/visual/gripper/finger_1.obj": "42ac489ece054aea84e7be9ab613b8b4a6f099a8ae99eada79b219e698ae18ae",
+    "simulation/v1/meshes/camera_cad/wrist-camera_base.stl": "978f06404604c76a22abd5701c1c695e8582b7368f3bf10159ef8edb3ff16d9f",
+    "simulation/v1/meshes/camera_cad/wrist-camera_D405.stl": "db5f0e330d37d23b4427c1cb243924f7911c816e7de148d7f72778d819c96efc",
+    "simulation/v1/meshes/d405.stl": "a248f41149d12b28311829feecbe7a80cf1481fd05e0f5df2c4c7ecd556edd48",
+    "simulation/v1/meshes/camera_cad/chest-camera_D435.stl": "a9690eb09fa78c6df9c453bcb04dce0648f4f42ce1a5ffec953bc1134d43cb71",
+    "simulation/v1/meshes/d435_v21.obj": "0f6dfa803459d622df78c496685aca4bc78952ed5deffdb1be927a443e64e287"
+  }
+}

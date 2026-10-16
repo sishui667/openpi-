@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -12,7 +13,7 @@ from member_b_scene import ROOT, SCENE, TARGET_ZONE, build_scene
 from task_workspace import CONFIG, CONFIG_PATH
 from teleop_towel_dataset import build_arm_specs, build_finger_actuators
 
-DEFAULT_MANIFEST = ROOT / "deliverables/member_B_20261016/scene_manifest.json"
+DEFAULT_MANIFEST = ROOT / "deliverables/member_AB_20261016/scene_manifest.json"
 
 
 def digest(path):
@@ -26,8 +27,12 @@ def inspect_scene():
     tracked = [base, SCENE, CONFIG_PATH, ROOT / "task_workspace.py",
                ROOT / "member_b_scene.py", ROOT / "pose2arm_driver.py",
                ROOT / "workspace_camera.py", ROOT / "member_b_realtime.py",
-               ROOT / "member_b_actuators.py", ROOT / "freeze_member_b_scene.py",
+               ROOT / "member_b_actuators.py", ROOT / "freeze_member_b_scene.py", ROOT / "demo_member_ab.py",
                ROOT / "realtime_capture.py", ROOT / "teleop_towel_dataset.py"]
+    a_root = ROOT.parent / "pose2arm-main"
+    for name in ("member_b_export.py", "gripper_map.py", "smoothing.py",
+                 "scripts/generate_ik_dataset.py", "collision_safety.py", "hand_association.py", "extract_hand.py"):
+        tracked.append(a_root / name)
     tree = ET.parse(base).getroot()
     compiler = tree.find("compiler")
     meshdir = compiler.attrib.get("meshdir", "") if compiler is not None else ""
@@ -35,7 +40,7 @@ def inspect_scene():
         if node.tag in ("mesh", "texture") and "file" in node.attrib:
             directory = meshdir if node.tag == "mesh" else ""
             tracked.append(base.parent / directory / node.attrib["file"])
-    hashes = {p.resolve().relative_to(ROOT).as_posix(): digest(p) for p in tracked}
+    hashes = {Path(os.path.relpath(p.resolve(), ROOT)).as_posix(): digest(p) for p in tracked}
     active_welds = [i for i in range(model.neq)
                     if model.eq_type[i] == mujoco.mjtEq.mjEQ_WELD and data.eq_active[i]]
     if active_welds:
@@ -69,7 +74,7 @@ def inspect_scene():
         "active_welds": active_welds,
     }
     return {
-        "schema_version": 1, "role": "Member B simulation and actuator interface",
+        "schema_version": 2, "role": "Merged Member A/B offline demonstration interface",
         "source_scene": SCENE.relative_to(ROOT).as_posix(), "mujoco_version": mujoco.__version__,
         "active_arm": "right", "inactive_arm": "left", "inactive_policy": "fixed initial high standby",
         "workspace": CONFIG, "physics": physics, "cameras": cameras,

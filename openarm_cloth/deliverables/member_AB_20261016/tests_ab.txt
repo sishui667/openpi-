@@ -1,0 +1,67 @@
+test_bad_gripper_contract_rejected (test_member_ab_integration.ABContractTests.test_bad_gripper_contract_rejected) ... ok
+test_continuous_priority_and_slide_units (test_member_ab_integration.ABContractTests.test_continuous_priority_and_slide_units) ... ok
+test_declared_left_first_gripper (test_member_ab_integration.ABContractTests.test_declared_left_first_gripper) ... ok
+test_exact_hysteresis_boundaries_and_invalid_signal (test_member_ab_integration.ABContractTests.test_exact_hysteresis_boundaries_and_invalid_signal) ... ok
+test_export_missing_signal_and_timing_mismatch_rejected (test_member_ab_integration.ABContractTests.test_export_missing_signal_and_timing_mismatch_rejected) ... ok
+test_float32_missing_hand_counts_toward_release (test_member_ab_integration.ABContractTests.test_float32_missing_hand_counts_toward_release) ... ok
+test_missing_human_signal_never_uses_object_position (test_member_ab_integration.ABContractTests.test_missing_human_signal_never_uses_object_position) ... ok
+test_resample_preserves_video_duration_and_separates_mirror (test_member_ab_integration.ABContractTests.test_resample_preserves_video_duration_and_separates_mirror) ... ok
+test_right_gripper_is_column_zero_not_joint_order (test_member_ab_integration.ABContractTests.test_right_gripper_is_column_zero_not_joint_order) ... ok
+test_bad_numbers_and_shapes_rejected (test_member_b_delivery.DeliveryTests.test_bad_numbers_and_shapes_rejected) ... ok
+test_cached_pd_matches_original_for_100_physics_steps (test_member_b_delivery.DeliveryTests.test_cached_pd_matches_original_for_100_physics_steps) ... ok
+test_delivery_resolution_monocular_accuracy (test_member_b_delivery.DeliveryTests.test_delivery_resolution_monocular_accuracy) ... ok
+test_explicit_order_resolves_ambiguous_source (test_member_b_delivery.DeliveryTests.test_explicit_order_resolves_ambiguous_source) ... ok
+test_first_frame_is_also_slew_limited (test_member_b_delivery.DeliveryTests.test_first_frame_is_also_slew_limited) ... ok
+test_freeze_detects_tampered_hash (test_member_b_delivery.DeliveryTests.test_freeze_detects_tampered_hash) ... ok
+test_full_physics_interval_and_frequency (test_member_b_delivery.DeliveryTests.test_full_physics_interval_and_frequency) ... ok
+test_human_distance_optional_input_takes_precedence (test_member_b_delivery.DeliveryTests.test_human_distance_optional_input_takes_precedence) ... ok
+test_hysteresis_exact_boundaries_and_missing (test_member_b_delivery.DeliveryTests.test_hysteresis_exact_boundaries_and_missing) ... ok
+test_inactive_hold_is_fixed_not_current_drift (test_member_b_delivery.DeliveryTests.test_inactive_hold_is_fixed_not_current_drift) ... ok
+test_monocular_tracking_checks_current_pixels (test_member_b_delivery.DeliveryTests.test_monocular_tracking_checks_current_pixels) ... ok
+test_no_active_weld_and_target_zone_defined (test_member_b_delivery.DeliveryTests.test_no_active_weld_and_target_zone_defined) ... ok
+test_order_contradiction_rejected (test_member_b_delivery.DeliveryTests.test_order_contradiction_rejected) ... ok
+test_close_placement_cancels_instead_of_starting_grasp (test_task_workspace.WorkspaceTest.test_close_placement_cancels_instead_of_starting_grasp) ... ok
+test_cube_diagonal_fits_at_all_corners (test_task_workspace.WorkspaceTest.test_cube_diagonal_fits_at_all_corners) ... ok
+test_mouse_outside_is_clamped_only_in_fixture (test_task_workspace.WorkspaceTest.test_mouse_outside_is_clamped_only_in_fixture) ... ok
+test_physical_size_and_unchanged_cameras (test_task_workspace.WorkspaceTest.test_physical_size_and_unchanged_cameras) ... ok
+test_placement_ui_clamps_drag_before_confirmation (test_task_workspace.WorkspaceTest.test_placement_ui_clamps_drag_before_confirmation) ... ok
+test_standby_does_not_knock_edge_cube_off (test_task_workspace.WorkspaceTest.test_standby_does_not_knock_edge_cube_off) ... ok
+test_trimmed_table_has_only_the_specified_support_rim (test_task_workspace.WorkspaceTest.test_trimmed_table_has_only_the_specified_support_rim) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 8.035s
+
+OK
+RGB256 fixture=(0.36,-0.12,0) error_m=0.003162 IoU=0.8725
+RGB256 fixture=(0.43,0,30) error_m=0.002236 IoU=0.9330
+RGB256 fixture=(0.5,0.12,45) error_m=0.008944 IoU=0.8553
+RGB256 fixture=(0.36,0.12,45) error_m=0.006403 IoU=0.8739
+RGB256 fixture=(0.5,-0.12,0) error_m=0.005000 IoU=0.8354
+
+INTERACTIVE PLACEMENT (2 cm per press):
+  W/S or Up/Down    move forward/backward (world X)
+  A/D or Left/Right move left/right (world Y)
+  Q/E                rotate 15 degrees
+  R                  reset to the green centre marker
+  Mouse              double-click cube, then Ctrl + right-drag
+  SPACE              accept and start wrist-camera perception + IK
+  ENTER              does nothing (prevents accidental acceptance)
+The placement window also accepts automatically after 30 s.
+
+Table 24.6 x 44.6 cm | top 40.0 cm
+Cube centre stays inside the amber outline
+placement cancelled by closing the window
+
+INTERACTIVE PLACEMENT (2 cm per press):
+  W/S or Up/Down    move forward/backward (world X)
+  A/D or Left/Right move left/right (world Y)
+  Q/E                rotate 15 degrees
+  R                  reset to the green centre marker
+  Mouse              double-click cube, then Ctrl + right-drag
+  SPACE              accept and start wrist-camera perception + IK
+  ENTER              does nothing (prevents accidental acceptance)
+The placement window also accepts automatically after 30 s.
+
+Table 24.6 x 44.6 cm | top 40.0 cm
+Cube centre stays inside the amber outline
+interactive fixture accepted; controller coordinates remain hidden

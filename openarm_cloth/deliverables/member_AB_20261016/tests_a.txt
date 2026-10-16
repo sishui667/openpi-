@@ -1,0 +1,22 @@
+test_nonfinite_and_bad_units_gripper_rejected (test_ab_improvements.CollisionInputTests.test_nonfinite_and_bad_units_gripper_rejected) ... ok
+test_nonfinite_angles_never_certified_as_safe (test_ab_improvements.CollisionInputTests.test_nonfinite_angles_never_certified_as_safe) ... ok
+test_nonfinite_margin_rejected (test_ab_improvements.CollisionInputTests.test_nonfinite_margin_rejected) ... ok
+test_duplicate_not_forced_onto_opposite_hand (test_ab_improvements.HandAssociationTests.test_duplicate_not_forced_onto_opposite_hand) ... ok
+test_far_detection_missing_not_fabricated (test_ab_improvements.HandAssociationTests.test_far_detection_missing_not_fabricated) ... ok
+test_global_assignment_ignores_detection_order (test_ab_improvements.HandAssociationTests.test_global_assignment_ignores_detection_order) ... ok
+test_temporary_pose_loss_uses_temporal_wrist (test_ab_improvements.HandAssociationTests.test_temporary_pose_loss_uses_temporal_wrist) ... ok
+test_fractional_frame_clock_does_not_slow_physics (test_ab_improvements.ReplayPhysicsTests.test_fractional_frame_clock_does_not_slow_physics) ... ok
+test_torque_actuator_not_mistaken_for_position (test_ab_improvements.ReplayPhysicsTests.test_torque_actuator_not_mistaken_for_position) ... ok
+test_limits_single_frame_closure_change (test_rtmw_hybrid_sim.HybridGripTests.test_limits_single_frame_closure_change) ... ok
+test_rejects_implausible_wrist_jump_without_relabeling_valid_frames (test_rtmw_hybrid_sim.HybridGripTests.test_rejects_implausible_wrist_jump_without_relabeling_valid_frames) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.112s
+
+OK
+jerk_p95=0.18071->0.02889
+Offline zero-phase joint smoothing regression passed.
+Per-arm pose quality gating regression passed.
+bad_frames=357->264 wrist=0.0762->0.0667m
+jerk_p95=[9253.454670672894, 9638.724938896345]->[3748.905373779695, 4222.239688959429] holds=[1, 0] unsafe=0
+Reference-locked output regression passed.

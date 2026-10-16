@@ -1,0 +1,64 @@
+{
+  "scope": "A NPZ actuator playback, NOT grasp-success evaluation",
+  "frames_requested": 80,
+  "gripper_source": "gripper_position",
+  "driver": {
+    "frames": 417,
+    "order": "left-first",
+    "order_evidence": "explicit NPZ/API joint_order contract",
+    "arm": "right",
+    "clipped_joints": 0,
+    "clipped_by_joint": {},
+    "rate_limited_frames": 12,
+    "max_clip_rad": 1.5738078316656627,
+    "max_lag_rad": 1.573807831665663,
+    "drive_seconds": 0.0,
+    "estop": null,
+    "estop_frame": null,
+    "gripper": {
+      "closed": 0,
+      "open": 6,
+      "partial": 74
+    },
+    "source_max_step_rad": {
+      "right_joint1": 0.12277925256862778,
+      "right_joint2": 0.08215368447984742,
+      "right_joint3": 0.30322301723946476,
+      "right_joint4": 0.2985672615771451,
+      "right_joint5": 0.46343050021808785,
+      "right_joint6": 0.35752906573813364,
+      "right_joint7": 0.06874194663969839
+    },
+    "ratio_to_20hz_limit": {
+      "right_joint1": 0.14655834385989588,
+      "right_joint2": 0.09806467857934636,
+      "right_joint3": 1.1136850084088028,
+      "right_joint4": 1.0965852336913544,
+      "right_joint5": 0.44254249447869354,
+      "right_joint6": 0.34141431029233543,
+      "right_joint7": 0.06564357012958212
+    },
+    "ratio_to_control_hz_limit": {
+      "right_joint1": 0.14655834385989588,
+      "right_joint2": 0.09806467857934636,
+      "right_joint3": 1.1136850084088028,
+      "right_joint4": 1.0965852336913544,
+      "right_joint5": 0.44254249447869354,
+      "right_joint6": 0.34141431029233543,
+      "right_joint7": 0.06564357012958212
+    },
+    "ratio_to_source_fps_limit": {
+      "right_joint1": 0.14655834385989588,
+      "right_joint2": 0.09806467857934636,
+      "right_joint3": 1.1136850084088028,
+      "right_joint4": 1.0965852336913544,
+      "right_joint5": 0.44254249447869354,
+      "right_joint6": 0.34141431029233543,
+      "right_joint7": 0.06564357012958212
+    },
+    "notes": [],
+    "gripper_source": "gripper_position",
+    "gripper_order": "right-first",
+    "clip_boundaries": []
+  }
+}

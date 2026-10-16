@@ -1,4 +1,5 @@
 venv/
+.venv-pose3d/
 __pycache__/
 **/__pycache__/
 *.pyc
@@ -9,6 +10,7 @@ log/
 logs/
 outputs/
 models/*.task
+models/rtmlib/
 videos/*.mp4
 data/*
 out/*

@@ -18,6 +18,7 @@ pre-recorded video offline.
 import math
 
 import numpy as np
+from scipy.signal import savgol_filter
 
 
 class _LowPassFilter:
@@ -78,6 +79,28 @@ def one_euro_sequence(signal, freq, min_cutoff=1.0, beta=0.0, d_cutoff=1.0):
     signal = np.asarray(signal, dtype=float)
     f = VectorOneEuroFilter(signal.shape[1], freq, min_cutoff, beta, d_cutoff)
     return np.array([f.filter(x) for x in signal])
+
+
+def offline_joint_trajectory(signal, window_length=9, polyorder=2):
+    """Zero-phase polynomial smoothing for an already-recorded trajectory.
+
+    Unlike a causal low-pass filter this does not add visible playback lag.
+    It is intentionally limited to the offline video pipeline; live control
+    must use a causal bounded-jerk filter or receding-horizon controller.
+    """
+    signal = np.asarray(signal, dtype=float)
+    if signal.ndim != 2:
+        raise ValueError("joint trajectory must have shape (T,D)")
+    if len(signal) < 3:
+        return signal.copy()
+    window = min(int(window_length), len(signal) if len(signal) % 2 else len(signal) - 1)
+    window = max(3, window)
+    if window % 2 == 0:
+        window -= 1
+    order = min(int(polyorder), window - 1)
+    return savgol_filter(
+        signal, window_length=window, polyorder=order,
+        axis=0, mode="interp")
 
 
 if __name__ == "__main__":

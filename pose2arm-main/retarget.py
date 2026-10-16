@@ -34,7 +34,8 @@ import numpy as np
 
 from pose_constants import LANDMARK
 from ik_solver import OpenArmIK
-from openarm_common import OPENARM_ARM_LENGTH, OPENARM_ANCHOR  # noqa: F401 (re-exported)
+from openarm_common import (OPENARM_ARM_LENGTH, OPENARM_ANCHOR,
+                            OPENARM_BASE_OFFSETS)  # noqa: F401 (re-exported)
 from smoothing import one_euro_sequence
 
 # Light residual filter, not the primary jitter fix (see module docstring).
@@ -72,11 +73,12 @@ ROOT_BETA = 3.0
 # beta=10.0 got the best lag at only 27% jerk reduction. Chose to sit at the
 # jerk-favoring end deliberately: the deliverable is what the robot arm
 # looks like, not a faithful reproduction of the performer's exact motion,
-# so a robot that moves smoothly (at the cost of slightly simplifying fast
-# moments) is the right tradeoff here -- unlike ROOT_BETA=0 in an earlier
-# version, which was an oversight, not a considered choice.
-ARM_MIN_CUTOFF = 0.3
-ARM_BETA = 0.0
+# The original 0.3/0.0 setting suppressed jitter but behaved like a very slow
+# fixed low-pass filter. 1.0/4.0 retains useful rest smoothing while opening
+# the cutoff during deliberate motion, which removes most of the visible
+# trailing without bypassing the filter.
+ARM_MIN_CUTOFF = 1.0
+ARM_BETA = 4.0
 
 # A straight arm makes the shoulder/forearm vectors near-parallel, so their
 # cross product (used to build the arm-plane normal) vanishes -- a real
@@ -120,6 +122,56 @@ def _normalize(v):
     if n < 1e-9:
         raise ValueError("cannot normalize a near-zero vector")
     return v / n
+
+
+def shared_arm_scale(frames_by_side, robot_arm_length=OPENARM_ARM_LENGTH):
+    """One robust human-to-robot scale shared by both arms.
+
+    Separate left/right gains turn landmark-estimation asymmetry into a false
+    change in hand separation. Pooling both sides preserves bilateral geometry.
+    """
+    lengths = []
+    for side in ("left", "right"):
+        for shoulder, elbow, wrist in frames_by_side[side]:
+            length = (np.linalg.norm(np.asarray(elbow) - shoulder)
+                      + np.linalg.norm(np.asarray(wrist) - elbow))
+            if np.isfinite(length) and length > 1e-6:
+                lengths.append(float(length))
+    if not lengths:
+        raise ValueError("cannot calibrate shared scale from empty/invalid arms")
+    return float(robot_arm_length) / float(np.median(lengths))
+
+
+def _soft_reach_limit(target, max_reach, soft_ratio=0.88):
+    """Radially compress the outer workspace without a hard target jump."""
+    target = np.asarray(target, dtype=float)
+    radius = float(np.linalg.norm(target))
+    soft = float(max_reach) * float(soft_ratio)
+    if radius <= soft or radius < 1e-12:
+        return target
+    span = max(float(max_reach) - soft, 1e-9)
+    limited_radius = soft + span * np.tanh((radius - soft) / span)
+    return target * (limited_radius / radius)
+
+
+def coupled_wrist_targets(left_wrist_body, right_wrist_body, scale,
+                           robot_arm_length=OPENARM_ARM_LENGTH,
+                           max_reach_ratio=0.95):
+    """Map both wrists through one torso-centred similarity transform.
+
+    Returned positions are local to each robot shoulder, matching OpenArmIK's
+    forward kinematics. Before reach compression, adding the two robot base
+    offsets reconstructs a pair of world targets whose separation is exactly
+    the scaled human inter-wrist separation.
+    """
+    max_reach = float(robot_arm_length) * float(max_reach_ratio)
+    result = {}
+    for side, wrist in (("left", left_wrist_body),
+                        ("right", right_wrist_body)):
+        world_target = float(scale) * (OPENARM_BODY_TO_ROBOT @ np.asarray(wrist, dtype=float))
+        local_target = world_target - OPENARM_BASE_OFFSETS[side]
+        result[side] = _soft_reach_limit(local_target, max_reach)
+    return result
 
 
 @dataclass

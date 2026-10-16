@@ -1,0 +1,181 @@
+{
+  "scope": "A offline video signals -> B physics; NOT autonomous grasp or live-human inference",
+  "optimized_B_scene_unchanged": "PASS",
+  "scene_hash_verification": "PASS",
+  "runs": {
+    "hybrid": {
+      "audit": "PASS",
+      "frames": 417,
+      "human_closure_over_half_frames": 162,
+      "source_duration_s": 20.83401041666667,
+      "simulated_playback_duration_s": 20.85,
+      "finger_target_range_m": [
+        2.291876307524987e-05,
+        0.044
+      ],
+      "measured_finger_range_m": [
+        0.0013009370698964795,
+        0.044211722492095866
+      ],
+      "finger_tracking_rms_m": 0.002151899484460953,
+      "driver": {
+        "frames": 417,
+        "order": "left-first",
+        "order_evidence": "explicit NPZ/API joint_order contract",
+        "arm": "right",
+        "clipped_joints": 0,
+        "clipped_by_joint": {},
+        "rate_limited_frames": 14,
+        "max_clip_rad": 1.5738078313357338,
+        "max_lag_rad": 1.573807831335734,
+        "drive_seconds": 20.85070099999939,
+        "estop": null,
+        "estop_frame": null,
+        "gripper": {
+          "closed": 0,
+          "open": 6,
+          "partial": 411
+        },
+        "source_max_step_rad": {
+          "right_joint1": 0.12277925256862778,
+          "right_joint2": 0.08215368447984742,
+          "right_joint3": 0.30322301723946476,
+          "right_joint4": 0.2985672615771451,
+          "right_joint5": 0.46343050021808785,
+          "right_joint6": 0.35752906573813364,
+          "right_joint7": 0.06874194663969839
+        },
+        "ratio_to_20hz_limit": {
+          "right_joint1": 0.14655834385989588,
+          "right_joint2": 0.09806467857934636,
+          "right_joint3": 1.1136850084088028,
+          "right_joint4": 1.0965852336913544,
+          "right_joint5": 0.44254249447869354,
+          "right_joint6": 0.34141431029233543,
+          "right_joint7": 0.06564357012958212
+        },
+        "ratio_to_control_hz_limit": {
+          "right_joint1": 0.14655834385989588,
+          "right_joint2": 0.09806467857934636,
+          "right_joint3": 1.1136850084088028,
+          "right_joint4": 1.0965852336913544,
+          "right_joint5": 0.44254249447869354,
+          "right_joint6": 0.34141431029233543,
+          "right_joint7": 0.06564357012958212
+        },
+        "ratio_to_source_fps_limit": {
+          "right_joint1": 0.14655834385989588,
+          "right_joint2": 0.09806467857934636,
+          "right_joint3": 1.1136850084088028,
+          "right_joint4": 1.0965852336913544,
+          "right_joint5": 0.44254249447869354,
+          "right_joint6": 0.34141431029233543,
+          "right_joint7": 0.06564357012958212
+        },
+        "notes": [],
+        "gripper_source": "gripper_position",
+        "gripper_order": "right-first",
+        "clip_boundaries": []
+      },
+      "actual_hz": 19.999327600545048,
+      "end_to_end_ms": {
+        "mean": 30.81871846522782,
+        "p50": 29.0797,
+        "p95": 47.75308,
+        "p99": 52.4747,
+        "min": 11.9706,
+        "max": 63.3245
+      },
+      "deadline_misses": 11,
+      "latency_verdict": "FAIL",
+      "grasp_success": "not_evaluated"
+    },
+    "reference": {
+      "audit": "PASS",
+      "frames": 417,
+      "human_closure_over_half_frames": 111,
+      "source_duration_s": 20.83401041666667,
+      "simulated_playback_duration_s": 20.85,
+      "finger_target_range_m": [
+        5.441375370102052e-05,
+        0.044
+      ],
+      "measured_finger_range_m": [
+        0.0012146487239803206,
+        0.0464332013174324
+      ],
+      "finger_tracking_rms_m": 0.003335641790986916,
+      "driver": {
+        "frames": 417,
+        "order": "left-first",
+        "order_evidence": "explicit NPZ/API joint_order contract",
+        "arm": "right",
+        "clipped_joints": 0,
+        "clipped_by_joint": {},
+        "rate_limited_frames": 14,
+        "max_clip_rad": 1.5738078313357338,
+        "max_lag_rad": 1.573807831335734,
+        "drive_seconds": 20.850814500001434,
+        "estop": null,
+        "estop_frame": null,
+        "gripper": {
+          "closed": 0,
+          "open": 6,
+          "partial": 411
+        },
+        "source_max_step_rad": {
+          "right_joint1": 0.12277925256862778,
+          "right_joint2": 0.08215368447984742,
+          "right_joint3": 0.30322301723946476,
+          "right_joint4": 0.2985672615771451,
+          "right_joint5": 0.46343050021808785,
+          "right_joint6": 0.35752906573813364,
+          "right_joint7": 0.06874194663969839
+        },
+        "ratio_to_20hz_limit": {
+          "right_joint1": 0.14655834385989588,
+          "right_joint2": 0.09806467857934636,
+          "right_joint3": 1.1136850084088028,
+          "right_joint4": 1.0965852336913544,
+          "right_joint5": 0.44254249447869354,
+          "right_joint6": 0.34141431029233543,
+          "right_joint7": 0.06564357012958212
+        },
+        "ratio_to_control_hz_limit": {
+          "right_joint1": 0.14655834385989588,
+          "right_joint2": 0.09806467857934636,
+          "right_joint3": 1.1136850084088028,
+          "right_joint4": 1.0965852336913544,
+          "right_joint5": 0.44254249447869354,
+          "right_joint6": 0.34141431029233543,
+          "right_joint7": 0.06564357012958212
+        },
+        "ratio_to_source_fps_limit": {
+          "right_joint1": 0.14655834385989588,
+          "right_joint2": 0.09806467857934636,
+          "right_joint3": 1.1136850084088028,
+          "right_joint4": 1.0965852336913544,
+          "right_joint5": 0.44254249447869354,
+          "right_joint6": 0.34141431029233543,
+          "right_joint7": 0.06564357012958212
+        },
+        "notes": [],
+        "gripper_source": "gripper_position",
+        "gripper_order": "right-first",
+        "clip_boundaries": []
+      },
+      "actual_hz": 19.999218735554496,
+      "end_to_end_ms": {
+        "mean": 30.590816546762593,
+        "p50": 28.2419,
+        "p95": 49.45108,
+        "p99": 63.13633199999996,
+        "min": 13.0231,
+        "max": 76.0675
+      },
+      "deadline_misses": 19,
+      "latency_verdict": "FAIL",
+      "grasp_success": "not_evaluated"
+    }
+  }
+}
