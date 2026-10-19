@@ -28,7 +28,7 @@ import numpy as np
 from human_teleop_core import (ROOT, PadCartesianIK, RelativeWristMapper,
                               ArmPoseIK, human_right_wrist, human_right_pose)
 from gripper_map import GripperMapper
-from human_gripper_gestures import FistGripperMapper, fist_features
+from human_gripper_gestures import FistGripperMapper, fist_features, gesture_diagnostics
 from handeye_grasp_red_cube import finger_joint_indices
 from hand_association import associate_hands
 from smoothing import VectorOneEuroFilter
@@ -158,7 +158,7 @@ class HumanStream:
                                 for flt in hand_filter.filters: flt.freq=1/max(.01,min(.2,(infer_start-last_hand)/1e9))
                             # Gesture uses unsmoothed anatomical geometry: filtering
                             # a whole closing hand can temporarily invent an open one.
-                            fist=fist_features(right_world)
+                            fist=fist_features(right_world,right_norm,(bgr.shape[1],bgr.shape[0]))
                             right_world=hand_filter.filter(right_world.reshape(-1)).reshape(21,3)
                             last_hand=infer_start
                             distance=float(np.linalg.norm(
@@ -396,6 +396,7 @@ def run(args):
                          twist_target_rad=np.asarray(pose_ik.twist_target),twist_limit_hit=np.asarray(pose_ik.twist_limited),
                          arm_angle_error_deg=np.asarray(actual_angles),
                          read_to_step_ms=np.asarray(response),inference_ms=np.asarray(inference))
+                row.update({f'right_{k}':v for k,v in gesture_diagnostics(features).items()})
                 recorder.submit(row,obs['raw_image'] if fresh and args.save_video else None)
                 if fresh:
                     last_seq=obs['seq'];infer_samples.append(inference)

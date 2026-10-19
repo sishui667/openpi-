@@ -19,6 +19,7 @@ from human_teleop_core import ROOT
 from live_motion_scene import build_motion_scene
 from live_bimanual_stream import BimanualHumanStream
 from bimanual_teleop import BimanualController,SIDES
+from human_gripper_gestures import gesture_diagnostics
 from live_test_dataset import TestDatasetRecorder,array_or_nan
 from live_test_cycle import finish_test_cycle
 from handeye_grasp_red_cube import finger_joint_indices
@@ -123,6 +124,7 @@ def run(args):
                     arm=obs['arms'][s] if obs else None
                     for field in ('raw','filtered','norm'): row[f'{s}_hand_{field}']=array_or_nan(arm[f'hand_{field}'] if arm else None,(21,3))
                     row[f'{s}_curl_scores']=np.asarray(arm['fist']['scores'] if arm and arm['fist'] else [float('nan')]*4)
+                    row.update({f'{s}_{k}':v for k,v in gesture_diagnostics(arm['fist'] if arm else None).items()})
                     solver=control.solvers[s]
                     row[f'{s}_upper_target']=array_or_nan(solver.upper,(3,))
                     row[f'{s}_fore_target']=array_or_nan(solver.fore,(3,))

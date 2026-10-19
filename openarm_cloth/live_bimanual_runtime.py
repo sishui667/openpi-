@@ -22,6 +22,7 @@ from human_teleop_core import ROOT
 from live_motion_scene import build_motion_scene
 from live_bimanual_stream import BimanualHumanStream
 from bimanual_teleop import BimanualController,SIDES
+from human_gripper_gestures import gesture_diagnostics
 from live_test_dataset import TestDatasetRecorder,array_or_nan
 from live_test_cycle import finish_test_cycle
 
@@ -65,6 +66,7 @@ class BimanualControlLoop:
             arm=obs['arms'][s] if obs else None
             for field in ('raw','filtered','norm'): row[f'{s}_hand_{field}']=array_or_nan(arm[f'hand_{field}'] if arm else None,(21,3))
             row[f'{s}_curl_scores']=np.asarray(arm['fist']['scores'] if arm and arm['fist'] else [float('nan')]*4)
+            row.update({f'{s}_{k}':v for k,v in gesture_diagnostics(arm['fist'] if arm else None).items()})
             solver=c.solvers[s]
             row[f'{s}_upper_target']=array_or_nan(solver.upper,(3,));row[f'{s}_fore_target']=array_or_nan(solver.fore,(3,))
             row[f'{s}_rotation_target']=array_or_nan(solver.rotation,(3,3))
@@ -192,6 +194,7 @@ def run_split(args):
                 for i,s in enumerate(SIDES):
                     arm=obs['arms'][s] if obs else None
                     gesture=arm['fist']['gesture'] if state['hand_valid'][s] and arm['fist'] else 'HAND MISSING'
+                    if arm and arm['fist'] and arm['fist'].get('source')=='image_extension': gesture+=' [2D]'
                     lines.append(f'{s.upper()}: {"ARM OK" if state["valid"][s] else "ARM HOLD"} | {gesture} | {"CLOSED" if state["closed"][s] else "OPEN"}')
                     lines.append(f'  upper/fore error {state["errors"][i,0]:.0f}/{state["errors"][i,1]:.0f} deg')
                     if state['wrist_rejected'][s]: lines.append(f'  {s.upper()} WRIST: holding noisy palm estimate')

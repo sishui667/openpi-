@@ -167,7 +167,8 @@ class BimanualHumanStream:
                     for index,s in enumerate(SIDES):
                         candidate=assigned.get(s);hraw=hfiltered=hnorm=fist=None;distance=None
                         if candidate is not None:
-                            hraw=candidate['world'];hnorm=candidate['norm'];fist=fist_features(hraw)
+                            hraw=candidate['world'];hnorm=candidate['norm']
+                            fist=fist_features(hraw,hnorm,(bgr.shape[1],bgr.shape[0]))
                             if last_hand[s] is not None and capture_time-last_hand[s]>400000000:
                                 hand_filters[s]=VectorOneEuroFilter(63,30,min_cutoff=2,beta=5)
                             hz=30 if last_hand[s] is None else 1/max(.01,min(.2,(capture_time-last_hand[s])/1e9))
