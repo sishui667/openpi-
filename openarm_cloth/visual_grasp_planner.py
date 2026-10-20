@@ -9,7 +9,8 @@ from handeye_grasp_red_cube import solve_gripper_contact_proxy_q
 
 def plan_face_grasp(model, data, spec, finger_geoms, finger_indices,
                     proxies, center, yaw, seed, clear_q, finger_open,
-                    approach_height, transit_height, progress=None):
+                    approach_height, transit_height, progress=None,
+                    closing_axes=None):
     # Replace the object in a separate planning state with the visual estimate.
     # No object pose, contact position or segmentation ID from execution enters
     # the search.  Robot joints and static model geometry are available inputs.
@@ -70,6 +71,12 @@ def plan_face_grasp(model, data, spec, finger_geoms, finger_indices,
     physical_span = float(np.linalg.norm(points[0] - points[1]))
     candidates = []
     c, s = np.cos(yaw), np.sin(yaw)
+    axes=(np.array([c,s,0.0]),np.array([-s,c,0.0])) if closing_axes is None else closing_axes
+    axes=[np.asarray(axis,dtype=float) for axis in axes]
+    if not axes or any(axis.shape!=(3,) or not np.isfinite(axis).all() or
+                       np.linalg.norm(axis)<1e-8 or abs(axis[2])>1e-8 for axis in axes):
+        raise ValueError('closing_axes must contain finite nonzero horizontal directions')
+    if closing_axes is not None: axes=[axis/np.linalg.norm(axis) for axis in axes]
     for down_weight in (0.8, 0.0):
         if down_weight == 0.0:
             current_best = min(candidates, key=lambda item: item[0])[6]
@@ -78,8 +85,7 @@ def plan_face_grasp(model, data, spec, finger_geoms, finger_indices,
                     and current_best["max_new_penetration_mm"] < 0.5):
                 break
             print("Trying alternate wrist tilts for reach and face alignment", flush=True)
-        for face_index, normal in enumerate((np.array([c, s, 0.0]),
-                                             np.array([-s, c, 0.0]))):
+        for face_index, normal in enumerate(axes):
             for sign in (1.0, -1.0):
                 direction = sign * normal
                 q, residual, pads, metrics = solve_gripper_contact_proxy_q(
